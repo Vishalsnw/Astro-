@@ -1,16 +1,21 @@
 package com.astroguru.app
 
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface DeepSeekApi {
     @POST("chat/completions")
-    suspend fun getCompletion(@Body request: DeepSeekRequest): DeepSeekResponse
+    suspend fun getCompletion(
+        @Header("Authorization") authHeader: String,
+        @Body request: DeepSeekRequest
+    ): DeepSeekResponse
 }
 
 data class DeepSeekRequest(
     val model: String = "deepseek-chat",
-    val messages: List<Message>
+    val messages: List<Message>,
+    val temperature: Double = 0.7
 )
 
 data class Message(
