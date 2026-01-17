@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="deep_indigo">#1A237E</color>
+    <color name="celestial_purple">#311B92</color>
+    <color name="spiritual_gold">#FFD600</color>
+    <color name="soft_lavender">#F3E5F5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="calm_background">#FAFAFA</color>
+    <color name="deep_purple">#21005D</color>
     <color name="purple_primary">#6750A4</color>
     <color name="purple_secondary">#958DA5</color>
-    <color name="spiritual_gold">#FFD700</color>
-    <color name="calm_background">#F8F7FF</color>
-    <color name="deep_purple">#21005D</color>
 </resources>

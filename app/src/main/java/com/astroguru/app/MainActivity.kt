@@ -34,18 +34,18 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSubmit.setOnClickListener {
             if (!canMakeRequest()) {
-                Toast.makeText(this, "Daily limit reached (1/day). Upgrade to Pro for unlimited questions.", Toast.LENGTH_LONG).show()
+                showUpgradeDialog()
                 return@setOnClickListener
             }
 
-            val name = binding.etName.text.toString()
-            val dob = binding.etDob.text.toString()
-            val tob = binding.etTob.text.toString()
-            val pob = binding.etPob.text.toString()
-            val question = binding.etQuestion.text.toString()
+            val name = binding.etName.text.toString().trim()
+            val dob = binding.etDob.text.toString().trim()
+            val tob = binding.etTob.text.toString().trim()
+            val pob = binding.etPob.text.toString().trim()
+            val question = binding.etQuestion.text.toString().trim()
 
             if (name.isBlank() || dob.isBlank() || tob.isBlank() || pob.isBlank() || question.isBlank()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please fill all details to consult the stars", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -53,6 +53,15 @@ class MainActivity : AppCompatActivity() {
             viewModel.getAstroGuidance(details, question)
             recordRequest()
         }
+    }
+
+    private fun showUpgradeDialog() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Daily Limit Reached")
+            .setMessage("Free users can ask 1 question per day. Upgrade to Pro for unlimited guidance and detailed remedies!")
+            .setPositiveButton("Upgrade Now") { _, _ -> upgradeToPro() }
+            .setNegativeButton("Maybe Later", null)
+            .show()
     }
 
     private fun upgradeToPro() {
