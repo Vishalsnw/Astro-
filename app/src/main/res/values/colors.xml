@@ -5,8 +5,12 @@
     <color name="spiritual_gold">#FFD600</color>
     <color name="soft_lavender">#F3E5F5</color>
     <color name="white">#FFFFFF</color>
-    <color name="calm_background">#FAFAFA</color>
+    <color name="calm_background">#F8F9FF</color>
     <color name="deep_purple">#21005D</color>
     <color name="purple_primary">#6750A4</color>
     <color name="purple_secondary">#958DA5</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_main">#1C1B1F</color>
+    <color name="text_secondary">#49454F</color>
+    <color name="accent_gold">#FFC107</color>
 </resources>

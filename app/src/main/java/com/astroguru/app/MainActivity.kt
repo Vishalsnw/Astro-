@@ -117,11 +117,13 @@ class MainActivity : AppCompatActivity() {
                     is AstroUiState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                         binding.btnSubmit.isEnabled = false
+                        binding.resultCard.visibility = View.VISIBLE
                         binding.tvResult.text = "Consulting the stars..."
                     }
                     is AstroUiState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         binding.btnSubmit.isEnabled = true
+                        binding.resultCard.visibility = View.VISIBLE
                         formatReport(state.report)
                     }
                     is AstroUiState.Error -> {
