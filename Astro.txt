@@ -1,0 +1,102 @@
+Astro Guru – AI Kundli & Problem Solver App (Kotlin)
+Build a production-ready Android application in Kotlin named “Astro Guru”.
+The app acts as an AI-powered astrologer that generates kundli-based insights and solutions using the DeepSeek API.
+🎯 CORE FUNCTIONALITY
+The app should:
+Collect birth details from the user
+Accept a personal problem or question
+Send structured data to DeepSeek API
+Receive and display kundli analysis + remedies + guidance
+📱 USER FLOW (VERY IMPORTANT)
+1️⃣ App Launch → Form Screen
+Show a clean form with the following fields:
+Birth Details
+Full Name (Text)
+Date of Birth (Date Picker)
+Time of Birth (Time Picker)
+Place of Birth (City, State, Country)
+Gender (Optional)
+User Question
+Multi-line text box
+Example:
+“Why am I facing career delays?”
+“When will my financial situation improve?”
+Submit Button
+“Get Astro Guidance”
+2️⃣ Validation
+All required fields must be filled
+Show friendly error messages
+Disable submit while API call is in progress
+3️⃣ API Interaction (DeepSeek)
+On submit:
+Construct a single structured prompt including:
+Birth details
+User’s question
+Instruction to act as a professional Vedic astrologer
+Example system prompt logic:
+“You are an experienced Vedic astrologer.
+Analyze kundli based on the provided birth details and answer the user’s question with clarity, remedies, and practical guidance.
+Avoid fear-based language.”
+4️⃣ Result Screen (Astro Report)
+Display response in sections:
+🔮 Kundli Overview
+Personality traits
+Strengths & weaknesses
+📊 Current Life Analysis
+Career / Finance / Relationship (based on question)
+🪔 Remedies & Solutions
+Practical remedies
+Behavioral suggestions
+Spiritual guidance (non-extreme)
+⚠️ Disclaimer
+“This guidance is for informational purposes only.”
+💰 MONETIZATION (SAFE & REALISTIC)
+🆓 Free Version
+1 analysis per day
+Limited response length
+💎 Pro Version (One-Time or Credits)
+Unlimited questions
+Detailed remedies
+History saved
+(Implement feature lock via local flags)
+🧱 TECH STACK REQUIREMENTS
+🔹 Language & Architecture
+Kotlin
+MVVM architecture
+ViewModel + LiveData / StateFlow
+🔹 UI
+Material Design 3
+Simple, spiritual, calming theme
+Light & Dark mode
+🔹 Networking
+Retrofit / OkHttp
+JSON-based API calls
+Secure API key handling
+🔹 Storage
+SharedPreferences (for limits)
+Room DB (optional for history)
+🔐 PRIVACY & SAFETY (VERY IMPORTANT)
+Do NOT store birth data on server
+No data sharing with third parties
+Clear privacy policy support
+No medical, legal, or guaranteed predictions
+📦 APP SCREENS
+Splash Screen
+Birth Details + Question Form
+Loading / Progress Screen
+Result Screen
+History Screen (optional)
+Settings / Disclaimer
+🧪 QUALITY REQUIREMENTS
+Clean, readable, commented Kotlin code
+Proper error handling (API failure, timeout)
+Smooth UI transitions
+Play Store–ready structure
+🚀 FUTURE READY (OPTIONAL)
+Multiple languages (Hindi / English)
+Voice input for question
+Daily horoscope section
+🔥 FINAL INSTRUCTION TO REPLIT
+Focus on clarity, trust, and user comfort.
+The app must feel like a calm, professional astrologer — not fear-based or exaggerated.
+Ensure Play Store policy compliance.
