@@ -13,6 +13,9 @@ import com.astroguru.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 import java.util.*
 
+import android.view.animation.AnimationUtils
+import android.view.animation.Animation
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: AstroViewModel by viewModels()
@@ -116,14 +119,19 @@ class MainActivity : AppCompatActivity() {
                         binding.btnSubmit.isEnabled = true
                     }
                     is AstroUiState.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
+                        binding.loadingLayout.visibility = View.VISIBLE
+                        val anim = AnimationUtils.loadAnimation(this@MainActivity, R.anim.celestial_rotate)
+                        binding.ivUniverse.startAnimation(anim)
+                        
                         binding.btnSubmit.isEnabled = false
                         binding.btnSubmit.alpha = 0.7f
                         binding.resultCard.visibility = View.VISIBLE
-                        binding.tvResult.text = "Consulting the stars..."
+                        binding.tvResult.text = "Aligning with the Universe..."
                     }
                     is AstroUiState.Success -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.loadingLayout.visibility = View.GONE
+                        binding.ivUniverse.clearAnimation()
+                        
                         binding.btnSubmit.isEnabled = true
                         binding.btnSubmit.alpha = 1.0f
                         binding.resultCard.visibility = View.VISIBLE
@@ -132,10 +140,12 @@ class MainActivity : AppCompatActivity() {
                         formatReport(state.report)
                     }
                     is AstroUiState.Error -> {
-                        binding.progressBar.visibility = View.GONE
+                        binding.loadingLayout.visibility = View.GONE
+                        binding.ivUniverse.clearAnimation()
+                        
                         binding.btnSubmit.isEnabled = true
                         binding.btnSubmit.alpha = 1.0f
-                        binding.tvResult.text = "Error: ${state.message}"
+                        binding.tvResult.text = "The stars are occluded: ${state.message}"
                         Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_LONG).show()
                     }
                 }
