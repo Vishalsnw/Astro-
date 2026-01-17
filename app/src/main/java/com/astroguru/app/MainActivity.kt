@@ -1,5 +1,7 @@
 package com.astroguru.app
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -8,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.astroguru.app.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -23,6 +26,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        binding.etDob.setOnClickListener { showDatePicker() }
+        binding.etTob.setOnClickListener { showTimePicker() }
+
         binding.btnSubmit.setOnClickListener {
             val name = binding.etName.text.toString()
             val dob = binding.etDob.text.toString()
@@ -38,6 +44,20 @@ class MainActivity : AppCompatActivity() {
             val details = BirthDetails(name, dob, tob, pob, null)
             viewModel.getAstroGuidance(details, question)
         }
+    }
+
+    private fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        DatePickerDialog(this, { _, year, month, dayOfMonth ->
+            binding.etDob.setText(String.format("%02d/%02d/%d", dayOfMonth, month + 1, year))
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
+    private fun showTimePicker() {
+        val calendar = Calendar.getInstance()
+        TimePickerDialog(this, { _, hourOfDay, minute ->
+            binding.etTob.setText(String.format("%02d:%02d", hourOfDay, minute))
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
     }
 
     private fun observeViewModel() {

@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/calm_background"
     android:padding="16dp">
 
     <LinearLayout
@@ -12,17 +13,19 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Astro Guru"
-            android:textSize="24sp"
+            android:text="✨ Astro Guru"
+            android:textSize="28sp"
+            android:textColor="@color/deep_purple"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="24dp"
             android:gravity="center"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:hint="Full Name"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
@@ -33,36 +36,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="DOB (DD/MM/YYYY)"
-                android:layout_marginEnd="4dp">
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:hint="DOB"
+                android:layout_marginEnd="6dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDob"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Time (HH:MM)"
-                android:layout_marginStart="4dp">
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:hint="Time"
+                android:layout_marginStart="6dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etTob"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:clickable="true"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:hint="Place of Birth"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="12dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPob"
                 android:layout_width="match_parent"
@@ -72,8 +82,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:hint="Your Question"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="24dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etQuestion"
                 android:layout_width="match_parent"
@@ -85,9 +96,10 @@
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:text="Get Astro Guidance"
-            android:layout_marginBottom="24dp"/>
+            style="@style/Widget.Material3.Button"
+            android:layout_marginBottom="32dp"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -97,12 +109,28 @@
             android:visibility="gone"
             android:layout_marginBottom="16dp"/>
 
-        <TextView
-            android:id="@+id/tvResult"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"/>
+            style="@style/Widget.Material3.CardView.Elevated"
+            android:layout_marginBottom="32dp">
+            <TextView
+                android:id="@+id/tvResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/deep_purple"
+                android:lineSpacingExtra="4dp"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⚠️ This guidance is for informational purposes only."
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
 
     </LinearLayout>
 </ScrollView>
