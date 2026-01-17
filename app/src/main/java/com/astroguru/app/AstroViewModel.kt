@@ -27,17 +27,18 @@ class AstroViewModel : ViewModel() {
             .create(DeepSeekApi::class.java)
     }
 
-    fun getAstroGuidance(details: BirthDetails, question: String) {
+    fun getAstroGuidance(details: BirthDetails, question: String, language: String = "English") {
         viewModelScope.launch {
             _uiState.value = AstroUiState.Loading
             try {
                 val request = AstrologyRequest(
                     name = details.name,
                     dob = details.dob,
-                    time = details.tob,
-                    place = details.pob,
+                    time = details.time,
+                    place = details.place,
                     gender = details.gender ?: "Not specified",
-                    question = question
+                    question = question,
+                    language = language
                 )
 
                 val response = api.getAstroAnalysis(request)
@@ -59,7 +60,7 @@ sealed class AstroUiState {
 data class BirthDetails(
     val name: String,
     val dob: String,
-    val tob: String,
-    val pob: String,
+    val time: String,
+    val place: String,
     val gender: String?
 )

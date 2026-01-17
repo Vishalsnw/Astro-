@@ -49,8 +49,9 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val selectedLanguage = if (binding.toggleLanguage.checkedButtonId == binding.btnHindi.id) "Hindi" else "English"
             val details = BirthDetails(name, dob, tob, pob, null)
-            viewModel.getAstroGuidance(details, question)
+            viewModel.getAstroGuidance(details, question, selectedLanguage)
             recordRequest()
         }
     }
