@@ -24,11 +24,13 @@ class MainActivity : AppCompatActivity() {
 
         setupListeners()
         observeViewModel()
+        checkProStatus()
     }
 
     private fun setupListeners() {
         binding.etDob.setOnClickListener { showDatePicker() }
         binding.etTob.setOnClickListener { showTimePicker() }
+        binding.tvUpgradePro.setOnClickListener { upgradeToPro() }
 
         binding.btnSubmit.setOnClickListener {
             if (!canMakeRequest()) {
@@ -51,6 +53,18 @@ class MainActivity : AppCompatActivity() {
             viewModel.getAstroGuidance(details, question)
             recordRequest()
         }
+    }
+
+    private fun upgradeToPro() {
+        val prefs = getSharedPreferences("astro_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("is_pro", true).apply()
+        checkProStatus()
+        Toast.makeText(this, "Welcome to Astro Guru Pro!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun checkProStatus() {
+        val isPro = getSharedPreferences("astro_prefs", Context.MODE_PRIVATE).getBoolean("is_pro", false)
+        binding.tvUpgradePro.visibility = if (isPro) View.GONE else View.VISIBLE
     }
 
     private fun canMakeRequest(): Boolean {
@@ -99,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                     is AstroUiState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         binding.btnSubmit.isEnabled = true
-                        binding.tvResult.text = state.report
+                        formatReport(state.report)
                     }
                     is AstroUiState.Error -> {
                         binding.progressBar.visibility = View.GONE
@@ -110,5 +124,16 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun formatReport(report: String) {
+        // Simple bolding for section headers
+        val formatted = report
+            .replace("🔮 Kundli Overview", "<b>🔮 Kundli Overview</b>")
+            .replace("📊 Current Life Analysis", "<b>📊 Current Life Analysis</b>")
+            .replace("🪔 Remedies & Solutions", "<b>🪔 Remedies & Solutions</b>")
+            .replace("\n", "<br/>")
+        
+        binding.tvResult.text = android.text.Html.fromHtml(formatted, android.text.Html.FROM_HTML_MODE_COMPACT)
     }
 }

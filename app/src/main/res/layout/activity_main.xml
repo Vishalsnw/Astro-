@@ -17,8 +17,21 @@
             android:textSize="28sp"
             android:textColor="@color/deep_purple"
             android:textStyle="bold"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"/>
+            android:layout_marginBottom="8dp"
+            android:gravity="center"
+            android:id="@+id/tvTitle"/>
+
+        <TextView
+            android:id="@+id/tvUpgradePro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💎 Get Unlimited with Pro"
+            android:textColor="@color/spiritual_gold"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
