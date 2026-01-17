@@ -2,6 +2,7 @@ package com.astroguru.app
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -30,6 +31,11 @@ class MainActivity : AppCompatActivity() {
         binding.etTob.setOnClickListener { showTimePicker() }
 
         binding.btnSubmit.setOnClickListener {
+            if (!canMakeRequest()) {
+                Toast.makeText(this, "Daily limit reached (1/day). Upgrade to Pro for unlimited questions.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
             val name = binding.etName.text.toString()
             val dob = binding.etDob.text.toString()
             val tob = binding.etTob.text.toString()
@@ -43,7 +49,24 @@ class MainActivity : AppCompatActivity() {
 
             val details = BirthDetails(name, dob, tob, pob, null)
             viewModel.getAstroGuidance(details, question)
+            recordRequest()
         }
+    }
+
+    private fun canMakeRequest(): Boolean {
+        val prefs = getSharedPreferences("astro_prefs", Context.MODE_PRIVATE)
+        val isPro = prefs.getBoolean("is_pro", false)
+        if (isPro) return true
+
+        val lastRequestDate = prefs.getString("last_request_date", "")
+        val today = String.format("%tD", Date())
+        return lastRequestDate != today
+    }
+
+    private fun recordRequest() {
+        val prefs = getSharedPreferences("astro_prefs", Context.MODE_PRIVATE)
+        val today = String.format("%tD", Date())
+        prefs.edit().putString("last_request_date", today).apply()
     }
 
     private fun showDatePicker() {
