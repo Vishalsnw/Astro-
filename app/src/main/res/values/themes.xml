@@ -4,5 +4,8 @@
         <item name="colorPrimary">@color/purple_primary</item>
         <item name="colorSecondary">@color/purple_secondary</item>
         <item name="android:windowBackground">@color/calm_background</item>
+        <item name="android:navigationBarColor">@color/calm_background</item>
+        <item name="android:statusBarColor">@color/calm_background</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>
