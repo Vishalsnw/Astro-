@@ -43,7 +43,7 @@ Keep the tone encouraging and non-fear-based.`;
                 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
                 'Content-Type': 'application/json'
             },
-            timeout: 60000 // 60 seconds timeout
+            timeout: 120000 // 120 seconds timeout
         });
 
         res.json({ result: response.data.choices[0].message.content });

@@ -13,8 +13,15 @@ class AstroViewModel : ViewModel() {
     val uiState: StateFlow<AstroUiState> = _uiState
 
     private val api: DeepSeekApi by lazy {
+        val okHttpClient = okhttp3.OkHttpClient.Builder()
+            .connectTimeout(120, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(120, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(120, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
+
         Retrofit.Builder()
             .baseUrl("https://f811d2a7-7d2a-4cb5-9eaf-47bce0643765-00-1gylsycuzzpfn.sisko.replit.dev/")
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(DeepSeekApi::class.java)
