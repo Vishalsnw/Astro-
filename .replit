@@ -1,29 +1,9 @@
-modules = ["nodejs-20"]
+modules = ["nodejs-20", "python-3.11", "java-graalvm22.3"]
 [agent]
 expertMode = true
 
 [nix]
 channel = "stable-25_05"
+packages = ["unzip"]
 
 [workflows]
-runButton = "Project"
-
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Build Android App"
-
-[[workflows.workflow]]
-name = "Build Android App"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "gradle build"
-
-[workflows.workflow.metadata]
-outputType = "console"

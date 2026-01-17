@@ -4,6 +4,8 @@
 
 Astro Guru is an AI-powered astrology application that generates Vedic kundli-based insights and solutions. The app collects user birth details and personal questions, then leverages the DeepSeek API to provide personalized astrological guidance including personality analysis, life insights, and remedies.
 
+**NOTE: Do not try to build the app in the Replit environment. The GitHub Actions workflow (.github/workflows/build.yml) is configured to build the APK/AAB.**
+
 The application follows a simple user flow:
 1. User enters birth details (name, DOB, time, place, gender)
 2. User submits a personal question or concern
