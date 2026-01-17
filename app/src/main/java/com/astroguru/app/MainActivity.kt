@@ -117,18 +117,23 @@ class MainActivity : AppCompatActivity() {
                     is AstroUiState.Loading -> {
                         binding.progressBar.visibility = View.VISIBLE
                         binding.btnSubmit.isEnabled = false
+                        binding.btnSubmit.alpha = 0.7f
                         binding.resultCard.visibility = View.VISIBLE
                         binding.tvResult.text = "Consulting the stars..."
                     }
                     is AstroUiState.Success -> {
                         binding.progressBar.visibility = View.GONE
                         binding.btnSubmit.isEnabled = true
+                        binding.btnSubmit.alpha = 1.0f
                         binding.resultCard.visibility = View.VISIBLE
+                        binding.resultCard.alpha = 0f
+                        binding.resultCard.animate().alpha(1f).setDuration(500).start()
                         formatReport(state.report)
                     }
                     is AstroUiState.Error -> {
                         binding.progressBar.visibility = View.GONE
                         binding.btnSubmit.isEnabled = true
+                        binding.btnSubmit.alpha = 1.0f
                         binding.tvResult.text = "Error: ${state.message}"
                         Toast.makeText(this@MainActivity, state.message, Toast.LENGTH_LONG).show()
                     }
