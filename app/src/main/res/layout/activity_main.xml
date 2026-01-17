@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/calm_background">
+    android:background="@color/mystic_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,10 +19,14 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="8dp"
             android:gravity="center"
-            android:text="✨ Astro Guru"
-            android:textColor="@color/deep_purple"
+            android:text="🕉️ Astro Guru"
+            android:textColor="@color/sacred_gold"
             android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:shadowColor="#000000"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="4" />
 
         <TextView
             android:id="@+id/tvUpgradePro"
@@ -32,8 +36,8 @@
             android:layout_marginBottom="24dp"
             android:background="?attr/selectableItemBackground"
             android:padding="8dp"
-            android:text="💎 Get Unlimited with Pro"
-            android:textColor="@color/accent_gold"
+            android:text="✨ Reveal Your Destiny with Pro"
+            android:textColor="@color/nebula_accent"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -41,8 +45,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/card_dark"
+            app:strokeColor="@color/sacred_gold"
+            app:strokeWidth="1dp"
             app:contentPadding="16dp">
 
             <LinearLayout
@@ -54,8 +61,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="Birth Details"
-                    android:textColor="@color/deep_purple"
+                    android:text="❂ Sacred Birth Details"
+                    android:textColor="@color/sacred_gold"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -64,12 +71,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:hint="Full Name">
+                    android:hint="Full Name"
+                    app:hintTextColor="@color/sacred_gold"
+                    app:boxStrokeColor="@color/divine_purple">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/ethereal_white"
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,12 +95,15 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="6dp"
                         android:layout_weight="1"
-                        android:hint="DOB">
+                        android:hint="Date"
+                        app:hintTextColor="@color/sacred_gold"
+                        app:boxStrokeColor="@color/divine_purple">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etDob"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/ethereal_white"
                             android:clickable="true"
                             android:focusable="false" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -101,12 +114,15 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
                         android:layout_weight="1"
-                        android:hint="Time">
+                        android:hint="Time"
+                        app:hintTextColor="@color/sacred_gold"
+                        app:boxStrokeColor="@color/divine_purple">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etTob"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/ethereal_white"
                             android:clickable="true"
                             android:focusable="false" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -116,12 +132,15 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Place of Birth">
+                    android:hint="Sacred Location"
+                    app:hintTextColor="@color/sacred_gold"
+                    app:boxStrokeColor="@color/divine_purple">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPob"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/ethereal_white"
                         android:inputType="textPostalAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,8 +151,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@color/card_dark"
+            app:strokeColor="@color/divine_purple"
+            app:strokeWidth="1dp"
             app:contentPadding="16dp">
 
             <LinearLayout
@@ -145,8 +167,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:text="Ask the Universe"
-                    android:textColor="@color/deep_purple"
+                    android:text="👁️ Seek Universal Guidance"
+                    android:textColor="@color/sacred_gold"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -154,12 +176,15 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Your Question">
+                    android:hint="Your Sacred Question"
+                    app:hintTextColor="@color/sacred_gold"
+                    app:boxStrokeColor="@color/nebula_accent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etQuestion"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/ethereal_white"
                         android:gravity="top"
                         android:minLines="3" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -169,8 +194,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="Choose Language"
-                    android:textColor="@color/deep_purple"
+                    android:text="Sacred Language"
+                    android:textColor="@color/sacred_gold"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -187,7 +212,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="English" />
+                        android:text="English"
+                        android:textColor="@color/sacred_gold" />
 
                     <Button
                         android:id="@+id/btnHindi"
@@ -195,7 +221,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Hindi" />
+                        android:text="Hindi"
+                        android:textColor="@color/sacred_gold" />
                 </com.google.android.material.button.MaterialButtonToggleGroup>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -206,9 +233,13 @@
             android:layout_width="match_parent"
             android:layout_height="64dp"
             android:layout_marginBottom="32dp"
-            android:text="Get Astro Guidance"
+            android:text="Consult the Stars"
+            android:backgroundTint="@color/divine_purple"
+            android:textColor="@color/sacred_gold"
             android:textSize="18sp"
-            app:cornerRadius="16dp" />
+            app:cornerRadius="16dp"
+            app:strokeColor="@color/sacred_gold"
+            app:strokeWidth="1dp" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -216,6 +247,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"
+            android:indeterminateTint="@color/sacred_gold"
             android:visibility="gone" />
 
         <com.google.android.material.card.MaterialCardView
@@ -225,7 +257,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:visibility="gone"
-            app:cardCornerRadius="16dp">
+            app:cardCornerRadius="20dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/card_dark"
+            app:strokeColor="@color/sacred_gold"
+            app:strokeWidth="1dp">
 
             <TextView
                 android:id="@+id/tvResult"
@@ -233,7 +269,7 @@
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="6dp"
                 android:padding="20dp"
-                android:textColor="@color/text_main"
+                android:textColor="@color/ethereal_white"
                 android:textSize="16sp" />
         </com.google.android.material.card.MaterialCardView>
 
