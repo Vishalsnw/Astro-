@@ -16,15 +16,15 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Code Status"
+args = "Code Status Check"
 
 [[workflows.workflow]]
-name = "Code Status"
+name = "Code Status Check"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "echo \"Code validation complete. APK/AAB builds are managed by GitHub Actions.\" && ls -R app/src/main/java/com/astroguru/app"
+args = "echo \"Code validation complete. APK/AAB builds are managed by GitHub Actions.\" && ls -R app/src/main/java/com/astroguru.app"
 
 [workflows.workflow.metadata]
 outputType = "console"
