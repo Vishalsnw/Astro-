@@ -20,5 +20,6 @@ data class AstrologyRequest(
 )
 
 data class AstrologyResponse(
-    val result: String
+    val result: String,
+    val pdf: String? = null
 )

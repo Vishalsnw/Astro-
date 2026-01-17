@@ -7,6 +7,9 @@ app.use(express.json());
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
+
 app.post('/api/astrology', async (req, res) => {
     try {
         const { name, dob, time, place, gender, question } = req.body;
@@ -15,27 +18,22 @@ app.post('/api/astrology', async (req, res) => {
             return res.status(500).json({ error: 'DeepSeek API Key is missing' });
         }
 
-        const prompt = `You are a professional Vedic Astrologer.
+        const prompt = `You are a professional Vedic Astrologer. 
+Format your response as a professional report with the following structure:
+1. ✨ KUNDLI DIAGRAM: Generate a text-based representation of the North Indian style Diamond Chart (Lagna Chart). Represent the 12 houses and place the planets based on the birth details provided.
+2. 📖 CHART EXPLANATION: Detailed explanation of the planetary positions and what they mean for the user.
+3. 🎯 FOCUS ON QUESTION: Directly answer the user's specific concern: "${question}".
+4. 🪔 REMEDIES: Specific behavioral, practical, and spiritual solutions to achieve the desired outcome or solve the problem.
+
 Birth Details:
-Name: ${name}
-Date of Birth: ${dob}
-Time of Birth: ${time}
-Place of Birth: ${place}
-Gender: ${gender}
+Name: ${name}, DOB: ${dob}, Time: ${time}, Place: ${place}, Gender: ${gender}
 
-User's Question: ${question}
-
-Please provide a detailed analysis in three parts:
-1. Kundli Overview (Personality, Strengths, Weaknesses)
-2. Life Analysis (Focused on the user's question)
-3. Remedies & Solutions (Practical and spiritual guidance)
-
-Keep the tone encouraging and non-fear-based.`;
+Keep the tone professional, encouraging, and detailed. Use clear headings.`;
 
         const response = await axios.post(DEEPSEEK_API_URL, {
             model: 'deepseek-chat',
             messages: [
-                { role: 'system', content: 'You are a professional Vedic Astrologer.' },
+                { role: 'system', content: 'You are a professional Vedic Astrologer providing structured reports.' },
                 { role: 'user', content: prompt }
             ]
         }, {
@@ -43,10 +41,31 @@ Keep the tone encouraging and non-fear-based.`;
                 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
                 'Content-Type': 'application/json'
             },
-            timeout: 120000 // 120 seconds timeout
+            timeout: 120000
         });
 
-        res.json({ result: response.data.choices[0].message.content });
+        const reportContent = response.data.choices[0].message.content;
+
+        // Generate PDF
+        const doc = new PDFDocument();
+        let buffers = [];
+        doc.on('data', buffers.push.bind(buffers));
+        doc.on('end', () => {
+            let pdfData = Buffer.concat(buffers);
+            res.json({ 
+                result: reportContent,
+                pdf: pdfData.toString('base64')
+            });
+        });
+
+        doc.fontSize(20).text('Astro Guru - Astrological Report', { align: 'center' });
+        doc.moveDown();
+        doc.fontSize(12).text(`Name: ${name}`);
+        doc.text(`Birth Details: ${dob}, ${time}, ${place}`);
+        doc.moveDown();
+        doc.text(reportContent);
+        doc.end();
+
     } catch (error) {
         console.error('API Error:', error.response?.data || error.message);
         res.status(error.response?.status || 500).json({ 
