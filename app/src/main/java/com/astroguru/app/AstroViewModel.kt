@@ -14,47 +14,27 @@ class AstroViewModel : ViewModel() {
 
     private val api: DeepSeekApi by lazy {
         Retrofit.Builder()
-            .baseUrl("https://api.deepseek.com/")
+            .baseUrl("https://f811d2a7-7d2a-4cb5-9eaf-47bce0643765-00-1gylsycuzzpfn.sisko.replit.dev/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(DeepSeekApi::class.java)
     }
 
-    private val apiKey = "Bearer sk-68be7759cb7746dbb0b90edba8e78fe0"
-
     fun getAstroGuidance(details: BirthDetails, question: String) {
         viewModelScope.launch {
             _uiState.value = AstroUiState.Loading
             try {
-                val prompt = """
-                    You are an experienced Vedic astrologer.
-                    Analyze the kundli based on the following birth details:
-                    Name: ${details.name}
-                    DOB: ${details.dob}
-                    Time: ${details.tob}
-                    Place: ${details.pob}
-                    Gender: ${details.gender ?: "Not specified"}
-                    
-                    User's Question: $question
-                    
-                    Provide the analysis in three clear sections:
-                    1. 🔮 Kundli Overview (Personality, strengths, weaknesses)
-                    2. 📊 Current Life Analysis (Directly addressing the user's question)
-                    3. 🪔 Remedies & Solutions (Practical, behavioral, and spiritual guidance)
-                    
-                    Avoid fear-based language and keep the tone professional and calming.
-                """.trimIndent()
-
-                val request = DeepSeekRequest(
-                    messages = listOf(
-                        Message(role = "system", content = "You are a professional Vedic astrologer."),
-                        Message(role = "user", content = prompt)
-                    )
+                val request = AstrologyRequest(
+                    name = details.name,
+                    dob = details.dob,
+                    time = details.tob,
+                    place = details.pob,
+                    gender = details.gender ?: "Not specified",
+                    question = question
                 )
 
-                val response = api.getCompletion(apiKey, request)
-                val report = response.choices.firstOrNull()?.message?.content ?: "No analysis generated."
-                _uiState.value = AstroUiState.Success(report)
+                val response = api.getAstroAnalysis(request)
+                _uiState.value = AstroUiState.Success(response.result)
             } catch (e: Exception) {
                 _uiState.value = AstroUiState.Error(e.message ?: "Failed to connect to astro service")
             }
