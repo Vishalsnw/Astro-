@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.AstroGuru" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_primary</item>
-        <item name="colorSecondary">@color/purple_secondary</item>
-        <item name="android:windowBackground">@color/calm_background</item>
-        <item name="android:navigationBarColor">@color/calm_background</item>
-        <item name="android:statusBarColor">@color/calm_background</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">@color/divine_purple</item>
+        <item name="colorSecondary">@color/sacred_gold</item>
+        <item name="android:windowBackground">@color/mystic_background</item>
+        <item name="android:navigationBarColor">@color/mystic_background</item>
+        <item name="android:statusBarColor">@color/mystic_background</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
     </style>

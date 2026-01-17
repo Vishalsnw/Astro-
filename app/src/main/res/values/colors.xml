@@ -8,4 +8,9 @@
     <color name="card_dark">#1A0B2E</color>
     <color name="text_main">#E0E0E0</color>
     <color name="text_secondary">#B0B0B0</color>
+    <color name="purple_primary">#6750A4</color>
+    <color name="purple_secondary">#958DA5</color>
+    <color name="calm_background">#0F041A</color>
+    <color name="deep_purple">#21005D</color>
+    <color name="accent_gold">#FFC107</color>
 </resources>
