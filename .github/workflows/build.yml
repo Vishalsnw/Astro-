@@ -37,9 +37,6 @@ jobs:
       - name: Create Keystore
         run: |
           mkdir -p ~/.android
-          echo "KEYSTORE_PASSWORD=AstroGuru@2026#SecureKey" > keystore.properties
-          echo "KEY_PASSWORD=AstroGuru@2026#SecureKey" >> keystore.properties
-          echo "KEY_ALIAS=astroguru_key" >> keystore.properties
           keytool -genkey -v \
             -keystore ~/.android/astroguru_release.keystore \
             -keyalg RSA -keysize 2048 \
@@ -48,6 +45,9 @@ jobs:
             -dname "CN=AstroGuru,O=AstroGuru Inc,L=India,C=IN" \
             -storepass AstroGuru@2026#SecureKey \
             -keypass AstroGuru@2026#SecureKey
+          echo "KEYSTORE_PASSWORD=AstroGuru@2026#SecureKey" > keystore.properties
+          echo "KEY_PASSWORD=AstroGuru@2026#SecureKey" >> keystore.properties
+          echo "KEY_ALIAS=astroguru_key" >> keystore.properties
 
       - name: Build Release APK
         run: |
