@@ -44,7 +44,8 @@ jobs:
             -alias astroguru_key \
             -dname "CN=AstroGuru,O=AstroGuru Inc,L=India,C=IN" \
             -storepass AstroGuru@2026#SecureKey \
-            -keypass AstroGuru@2026#SecureKey
+            -keypass AstroGuru@2026#SecureKey \
+            -noprompt
           echo "KEYSTORE_PASSWORD=AstroGuru@2026#SecureKey" > keystore.properties
           echo "KEY_PASSWORD=AstroGuru@2026#SecureKey" >> keystore.properties
           echo "KEY_ALIAS=astroguru_key" >> keystore.properties
