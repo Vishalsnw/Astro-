@@ -16,7 +16,8 @@ data class AstrologyRequest(
     val time: String,
     val place: String,
     val gender: String,
-    val question: String
+    val question: String,
+    val language: String = "English"
 )
 
 data class AstrologyResponse(

@@ -12,14 +12,14 @@ const fs = require('fs');
 
 app.post('/api/astrology', async (req, res) => {
     try {
-        const { name, dob, time, place, gender, question } = req.body;
+        const { name, dob, time, place, gender, question, language = 'English' } = req.body;
         
         if (!process.env.DEEPSEEK_API_KEY) {
             return res.status(500).json({ error: 'DeepSeek API Key is missing' });
         }
 
         const prompt = `You are a professional Vedic Astrologer. 
-Format your response as a professional report with the following structure:
+Format your response as a professional report in ${language} language with the following structure:
 1. ✨ KUNDLI DIAGRAM: Generate a text-based representation of the North Indian style Diamond Chart (Lagna Chart). Represent the 12 houses and place the planets based on the birth details provided.
 2. 📖 CHART EXPLANATION: Detailed explanation of the planetary positions and what they mean for the user.
 3. 🎯 FOCUS ON QUESTION: Directly answer the user's specific concern: "${question}".
@@ -28,6 +28,7 @@ Format your response as a professional report with the following structure:
 Birth Details:
 Name: ${name}, DOB: ${dob}, Time: ${time}, Place: ${place}, Gender: ${gender}
 
+IMPORTANT: The entire response MUST be in ${language}. 
 Keep the tone professional, encouraging, and detailed. Use clear headings.`;
 
         const response = await axios.post(DEEPSEEK_API_URL, {
