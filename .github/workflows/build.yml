@@ -37,33 +37,33 @@ jobs:
       - name: Create Keystore
         run: |
           mkdir -p ~/.android
-          echo "KEYSTORE_PASSWORD=InvoicePro@2026#SecureKey" > keystore.properties
-          echo "KEY_PASSWORD=InvoicePro@2026#SecureKey" >> keystore.properties
-          echo "KEY_ALIAS=invoicepro_key" >> keystore.properties
+          echo "KEYSTORE_PASSWORD=AstroGuru@2026#SecureKey" > keystore.properties
+          echo "KEY_PASSWORD=AstroGuru@2026#SecureKey" >> keystore.properties
+          echo "KEY_ALIAS=astroguru_key" >> keystore.properties
           keytool -genkey -v \
-            -keystore ~/.android/invoicepro_release.keystore \
+            -keystore ~/.android/astroguru_release.keystore \
             -keyalg RSA -keysize 2048 \
             -validity 10000 \
-            -alias invoicepro_key \
-            -dname "CN=InvoicePro,O=InvoicePro Inc,L=India,C=IN" \
-            -storepass InvoicePro@2026#SecureKey \
-            -keypass InvoicePro@2026#SecureKey
+            -alias astroguru_key \
+            -dname "CN=AstroGuru,O=AstroGuru Inc,L=India,C=IN" \
+            -storepass AstroGuru@2026#SecureKey \
+            -keypass AstroGuru@2026#SecureKey
 
       - name: Build Release APK
         run: |
           gradle assembleRelease \
-            -Pandroid.injected.signing.store.file=$HOME/.android/invoicepro_release.keystore \
-            -Pandroid.injected.signing.store.password=InvoicePro@2026#SecureKey \
-            -Pandroid.injected.signing.key.alias=invoicepro_key \
-            -Pandroid.injected.signing.key.password=InvoicePro@2026#SecureKey
+            -Pandroid.injected.signing.store.file=$HOME/.android/astroguru_release.keystore \
+            -Pandroid.injected.signing.store.password=AstroGuru@2026#SecureKey \
+            -Pandroid.injected.signing.key.alias=astroguru_key \
+            -Pandroid.injected.signing.key.password=AstroGuru@2026#SecureKey
 
       - name: Build Release AAB
         run: |
           gradle bundleRelease \
-            -Pandroid.injected.signing.store.file=$HOME/.android/invoicepro_release.keystore \
-            -Pandroid.injected.signing.store.password=InvoicePro@2026#SecureKey \
-            -Pandroid.injected.signing.key.alias=invoicepro_key \
-            -Pandroid.injected.signing.key.password=InvoicePro@2026#SecureKey
+            -Pandroid.injected.signing.store.file=$HOME/.android/astroguru_release.keystore \
+            -Pandroid.injected.signing.store.password=AstroGuru@2026#SecureKey \
+            -Pandroid.injected.signing.key.alias=astroguru_key \
+            -Pandroid.injected.signing.key.password=AstroGuru@2026#SecureKey
 
       - name: List Build Outputs
         run: |
@@ -76,20 +76,20 @@ jobs:
       - name: Upload APK to Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: invoicepro-release-apk
+          name: astroguru-release-apk
           path: app/build/outputs/apk/release/*.apk
           retention-days: 30
 
       - name: Upload AAB to Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: invoicepro-release-aab
+          name: astroguru-release-aab
           path: app/build/outputs/bundle/release/*.aab
           retention-days: 30
 
       - name: Create Release Notes
         run: |
-          echo "# InvoicePro Release Build" > release_notes.md
+          echo "# Astro Guru Release Build" > release_notes.md
           echo "" >> release_notes.md
           echo "Build Date: $(date)" >> release_notes.md
           echo "Commit: ${{ github.sha }}" >> release_notes.md
@@ -122,7 +122,7 @@ jobs:
           echo "  - APK: app/build/outputs/apk/release/app-release.apk"
           echo "  - AAB: app/build/outputs/bundle/release/app-release.aab"
           echo ""
-          echo "📱 Package: com.invoicepro.app"
+          echo "📱 Package: com.astroguru.app"
           echo "🔑 Signed: Yes (Release Key)"
           echo "🎯 Min SDK: 24"
           echo "📊 Target SDK: 34"
