@@ -80,41 +80,55 @@ IMPORTANT:
             });
         });
 
+        // Register fonts for Hindi support
+        try {
+            doc.registerFont('Hindi', 'fonts/NotoSansDevanagari-Regular.ttf');
+            doc.registerFont('Main', 'fonts/NotoSans-Regular.ttf');
+            doc.font('Main');
+        } catch (e) {
+            console.log('Font loading failed, falling back to Helvetica');
+        }
+
         // Professional PDF Styling
         doc.rect(0, 0, doc.page.width, doc.page.height).fill('#0F041A');
         
-        // Use a font that supports Hindi if possible, otherwise stick to standard but with better encoding
         doc.fillColor('#D4AF37').fontSize(26).text('ASTRO GURU', { align: 'center' });
         doc.fontSize(14).text('Sacred Astrological Revelation', { align: 'center' });
         doc.moveDown(2);
         
-        doc.fillColor('#F5F5F5').fontSize(12).text(`Prepared for: ${name}`, { continued: true }).fillColor('#D4AF37').text(` | Date: ${new Date().toLocaleDateString()}`);
+        doc.fillColor('#F5F5F5').fontSize(12);
+        doc.text(`Prepared for: ${name}`, { continued: true }).fillColor('#D4AF37').text(` | Date: ${new Date().toLocaleDateString()}`);
         doc.fillColor('#F5F5F5').text(`Birth Details: ${dob} at ${time}, ${place}`);
         doc.moveDown();
         doc.rect(50, doc.y, 500, 2).fill('#D4AF37');
         doc.moveDown();
 
-        // Split report into sections and handle ASCII chart separately to ensure monospace
+        // Split report into sections and handle ASCII chart separately
         const sections = reportContent.split('\n\n');
         sections.forEach(section => {
             if (section.includes('/') || section.includes('|')) {
-                // This is likely the ASCII chart, use Courier for monospace alignment
+                // ASCII Chart
                 doc.font('Courier').fillColor('#D4AF37').fontSize(10).text(section, { align: 'center' });
-                doc.font('Helvetica'); // Reset
+                doc.font('Main');
             } else {
+                // Check if text contains Hindi characters
+                const hasHindi = /[\u0900-\u097F]/.test(section);
+                if (hasHindi) doc.font('Hindi');
+                
                 doc.fillColor('#F5F5F5').fontSize(11).text(section, {
                     align: 'justify',
                     lineGap: 5
                 });
+                
+                doc.font('Main');
             }
             doc.moveDown();
         });
         
         doc.moveDown(2);
-        doc.fillColor('#D4AF37').fontSize(14).text('💎 PREMIUM SACRED REMEDIES', { underline: true });
-        doc.fillColor('#F5F5F5').fontSize(11).text('Based on your unique Lagna and planetary alignments, we recommend the following sacred rituals and behavioral changes to align yourself with the universe and overcome your current obstacles...');
-        // (Add more premium filler or specific AI generated remedies here if the prompt handled it)
-
+        doc.font('Main').fillColor('#D4AF37').fontSize(14).text('💎 PREMIUM SACRED REMEDIES', { underline: true });
+        doc.fillColor('#F5F5F5').fontSize(11).text('Based on your unique Lagna and planetary alignments, we provide specialized remedies to align your life path with the celestial forces.');
+        
         doc.end();
 
     } catch (error) {
