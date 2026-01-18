@@ -148,15 +148,11 @@ class MainActivity : AppCompatActivity() {
                         binding.llActionButtons.visibility = View.VISIBLE 
                         
                         binding.btnDownloadPdf.setOnClickListener {
-                            if (isPro) {
-                                val state = viewModel.uiState.value
-                                if (state is AstroUiState.Success && state.pdf != null) {
-                                    savePdfToDownloads(state.pdf, "AstroGuru_Report_${System.currentTimeMillis()}.pdf")
-                                } else {
-                                    Toast.makeText(this@MainActivity, "PDF not ready yet", Toast.LENGTH_SHORT).show()
-                                }
+                            val state = viewModel.uiState.value
+                            if (state is AstroUiState.Success && state.pdf != null) {
+                                savePdfToDownloads(state.pdf, "AstroGuru_Report_${System.currentTimeMillis()}.pdf")
                             } else {
-                                showUpgradeDialog()
+                                Toast.makeText(this@MainActivity, "PDF not ready yet", Toast.LENGTH_SHORT).show()
                             }
                         }
 
