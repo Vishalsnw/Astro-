@@ -82,11 +82,17 @@ IMPORTANT:
 
         // Register fonts for Hindi support
         try {
-            doc.registerFont('Hindi', 'fonts/NotoSansDevanagari-Regular.ttf');
-            doc.registerFont('Main', 'fonts/NotoSans-Regular.ttf');
-            doc.font('Main');
+            if (fs.existsSync('fonts/NotoSansDevanagari-Regular.ttf') && fs.existsSync('fonts/NotoSans-Regular.ttf')) {
+                doc.registerFont('Hindi', 'fonts/NotoSansDevanagari-Regular.ttf');
+                doc.registerFont('Main', 'fonts/NotoSans-Regular.ttf');
+                doc.font('Main');
+            } else {
+                console.log('Font files missing, using Helvetica');
+                doc.font('Helvetica');
+            }
         } catch (e) {
-            console.log('Font loading failed, falling back to Helvetica');
+            console.log('Font loading failed:', e.message);
+            doc.font('Helvetica');
         }
 
         // Professional PDF Styling
