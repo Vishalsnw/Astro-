@@ -16,6 +16,12 @@ import java.util.*
 import android.view.animation.AnimationUtils
 import android.view.animation.Animation
 
+import android.content.ContentValues
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Base64
+import java.io.OutputStream
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: AstroViewModel by viewModels()
@@ -137,6 +143,23 @@ class MainActivity : AppCompatActivity() {
                         binding.resultCard.visibility = View.VISIBLE
                         binding.resultCard.alpha = 0f
                         binding.resultCard.animate().alpha(1f).setDuration(500).start()
+                        
+                        val isPro = getSharedPreferences("astro_prefs", Context.MODE_PRIVATE).getBoolean("is_pro", false)
+                        binding.btnDownloadPdf.visibility = if (isPro) View.VISIBLE else View.VISIBLE // Let them see it to provoke
+                        
+                        binding.btnDownloadPdf.setOnClickListener {
+                            if (isPro) {
+                                val state = viewModel.uiState.value
+                                if (state is AstroUiState.Success && state.pdf != null) {
+                                    savePdfToDownloads(state.pdf, "AstroGuru_Report_${System.currentTimeMillis()}.pdf")
+                                } else {
+                                    Toast.makeText(this@MainActivity, "PDF not ready yet", Toast.LENGTH_SHORT).show()
+                                }
+                            } else {
+                                showUpgradeDialog()
+                            }
+                        }
+                        
                         formatReport(state.report)
                     }
                     is AstroUiState.Error -> {
@@ -150,6 +173,28 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun savePdfToDownloads(base64Pdf: String, fileName: String) {
+        try {
+            val pdfData = Base64.decode(base64Pdf, Base64.DEFAULT)
+            val resolver = contentResolver
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+            }
+
+            val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+            uri?.let {
+                val outputStream: OutputStream? = resolver.openOutputStream(it)
+                outputStream?.write(pdfData)
+                outputStream?.close()
+                Toast.makeText(this, "Sacred Report saved to Downloads!", Toast.LENGTH_LONG).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Failed to save report: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 

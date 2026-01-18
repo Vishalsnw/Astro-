@@ -42,7 +42,7 @@ class AstroViewModel : ViewModel() {
                 )
 
                 val response = api.getAstroAnalysis(request)
-                _uiState.value = AstroUiState.Success(response.result)
+                _uiState.value = AstroUiState.Success(response.result, response.pdf)
             } catch (e: Exception) {
                 _uiState.value = AstroUiState.Error(e.message ?: "Failed to connect to astro service")
             }
@@ -53,7 +53,7 @@ class AstroViewModel : ViewModel() {
 sealed class AstroUiState {
     object Idle : AstroUiState()
     object Loading : AstroUiState()
-    data class Success(val report: String) : AstroUiState()
+    data class Success(val report: String, val pdf: String? = null) : AstroUiState()
     data class Error(val message: String) : AstroUiState()
 }
 
