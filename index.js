@@ -110,29 +110,33 @@ IMPORTANT:
         doc.moveDown();
 
         // Split report into sections and handle ASCII chart separately
-        const sections = reportContent.split('\n\n');
+        const sections = reportContent.split('\n');
         sections.forEach(section => {
+            if (!section.trim()) return;
+
             if (section.includes('/') || section.includes('|')) {
                 // ASCII Chart
                 doc.font('Courier').fillColor('#D4AF37').fontSize(10).text(section, { align: 'center' });
-                doc.font('Main');
+                try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
             } else {
                 // Check if text contains Hindi characters
                 const hasHindi = /[\u0900-\u097F]/.test(section);
-                if (hasHindi) doc.font('Hindi');
+                if (hasHindi) {
+                    try { doc.font('Hindi'); } catch(e) { doc.font('Helvetica'); }
+                } else {
+                    try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
+                }
                 
                 doc.fillColor('#F5F5F5').fontSize(11).text(section, {
                     align: 'justify',
-                    lineGap: 5
+                    lineGap: 2
                 });
-                
-                doc.font('Main');
             }
-            doc.moveDown();
         });
         
         doc.moveDown(2);
-        doc.font('Main').fillColor('#D4AF37').fontSize(14).text('💎 PREMIUM SACRED REMEDIES', { underline: true });
+        try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
+        doc.fillColor('#D4AF37').fontSize(14).text('💎 PREMIUM SACRED REMEDIES', { underline: true });
         doc.fillColor('#F5F5F5').fontSize(11).text('Based on your unique Lagna and planetary alignments, we provide specialized remedies to align your life path with the celestial forces.');
         
         doc.end();
