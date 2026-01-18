@@ -145,7 +145,8 @@ class MainActivity : AppCompatActivity() {
                         binding.resultCard.animate().alpha(1f).setDuration(500).start()
                         
                         val isPro = getSharedPreferences("astro_prefs", Context.MODE_PRIVATE).getBoolean("is_pro", false)
-                        binding.btnDownloadPdf.visibility = if (isPro) View.VISIBLE else View.VISIBLE // Let them see it to provoke
+                        binding.btnDownloadPdf.visibility = View.VISIBLE 
+                        binding.btnShareApp.visibility = View.VISIBLE
                         
                         binding.btnDownloadPdf.setOnClickListener {
                             if (isPro) {
@@ -158,6 +159,10 @@ class MainActivity : AppCompatActivity() {
                             } else {
                                 showUpgradeDialog()
                             }
+                        }
+
+                        binding.btnShareApp.setOnClickListener {
+                            shareApp()
                         }
                         
                         formatReport(state.report)
@@ -196,6 +201,15 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Toast.makeText(this, "Failed to save report: ${e.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun shareApp() {
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Astro Guru - Accurate Vedic Insights")
+            putExtra(Intent.EXTRA_TEXT, "I just got an amazing and accurate astrology reading from Astro Guru! You should try it too: https://play.google.com/store/apps/details?id=${packageName}")
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share via"))
     }
 
     private fun formatReport(report: String) {

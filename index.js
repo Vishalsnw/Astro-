@@ -21,7 +21,7 @@ app.post('/api/astrology', async (req, res) => {
         const prompt = `You are a professional Vedic Astrologer. 
 Format your response as a professional report in ${language} language with the following structure:
 
-1. ✨ KUNDLI INSIGHTS: Provide a deep analysis of the user's birth chart. Focus on their soul purpose and planetary strengths.
+1. 🔮 PERSONALITY REVELATION (The Mirror): Start by describing the user's core personality, hidden strengths, and a specific secret trait that only someone who knows their "Kundli" would know. This builds immediate trust.
 2. 📖 CHART EXPLANATION: Detailed explanation of the planetary positions and what they mean for the user.
 3. 🎯 FOCUS ON QUESTION: Directly address the user's specific concern: "${question}". Provide a summarized answer here.
 4. [LOCKED] 💎 PREMIUM GUIDANCE & REMEDIES: This section contains the most powerful remedies, precise calculations, and life-changing solutions. In the text response, mention that "The sacred remedies and full detailed analysis are available in your Premium PDF Report. Unlock it now to reveal the path to your success."
@@ -32,22 +32,23 @@ Name: ${name}, DOB: ${dob}, Time: ${time}, Place: ${place}, Gender: ${gender}
 IMPORTANT:
 - The entire response MUST be in ${language}.
 - Do NOT use markdown symbols like ** or ## in the result text.
-- Create a professional tone.
+- Be very specific about personality traits based on birth details to build "Aha!" moments.
+- The tone should be "Divine, Personal, and Accurate".
 - In the PDF generation, include the FULL report including all remedies and detailed charts.
 - FOR THE KUNDLI DIAGRAM: Generate a text-based ASCII North Indian Style Diamond Chart. 
-  Example structure:
-      / \ / \
-     / 12| 1 \
-    |\  / \  /|
-    | \/ 2 \/ |
-    |11/\   /\3|
-    | /  \ /  \|
-    |/ 10 \ 4 \|
-    |\    / \  /|
-    | \  / 7 \/ |
-    | 9\/_____\ 5|
-     \ 8 | 6 /
-      \ / \ /
+  Example structure (use double backslashes for diagonal lines):
+      / \\ / \\
+     / 12| 1 \\
+    |\\  / \\  /|
+    | \\/ 2 \\/ |
+    |11/\\   /\\3|
+    | /  \\ /  \\|
+    |/ 10 \\ 4 \\|
+    |\\    / \\  /|
+    | \\  / 7 \\/ |
+    | 9\\/_____\\ 5|
+     \\ 8 | 6 /
+      \\ / \\ /
   Place the zodiac numbers and planetary symbols based on birth details.`;
 
         const response = await axios.post(DEEPSEEK_API_URL, {

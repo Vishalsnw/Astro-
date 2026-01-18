@@ -301,9 +301,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:text="📥 Download Premium Report"
                 android:textColor="@color/sacred_gold"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/btnShareApp"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:text="✨ Share with Friends"
+                android:textColor="@color/nebula_accent"
                 android:visibility="gone" />
         </com.google.android.material.card.MaterialCardView>
 
