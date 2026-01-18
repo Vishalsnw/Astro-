@@ -133,8 +133,11 @@ IMPORTANT:
 
     } catch (error) {
         console.error('API Error:', error.response?.data || error.message);
-        res.status(error.response?.status || 500).json({ 
-            error: 'Astrological consultation failed. Please try again later.',
+        const statusCode = error.response?.status || 500;
+        const errorMessage = error.response?.data?.error?.message || error.message || 'Astrological consultation failed. Please try again later.';
+        
+        res.status(statusCode).json({ 
+            error: errorMessage,
             details: error.response?.data || error.message
         });
     }
