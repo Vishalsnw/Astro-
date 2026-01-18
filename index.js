@@ -54,7 +54,7 @@ IMPORTANT:
         const response = await axios.post(DEEPSEEK_API_URL, {
             model: 'deepseek-chat',
             messages: [
-                { role: 'system', content: 'You are a professional Vedic Astrologer. Provide structured analysis without markdown formatting. Always include a section for Premium Remedies which is only visible in the full report.' },
+                { role: 'system', content: 'You are a professional Vedic Astrologer. Provide structured analysis without markdown formatting. Keep the response concise but accurate. Avoid generating very long reports to prevent timeout.' },
                 { role: 'user', content: prompt }
             ]
         }, {
@@ -62,7 +62,7 @@ IMPORTANT:
                 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
                 'Content-Type': 'application/json'
             },
-            timeout: 120000
+            timeout: 110000
         });
 
         let reportContent = response.data.choices[0].message.content;
@@ -134,11 +134,16 @@ IMPORTANT:
     } catch (error) {
         console.error('API Error:', error.response?.data || error.message);
         const statusCode = error.response?.status || 500;
-        const errorMessage = error.response?.data?.error?.message || error.message || 'Astrological consultation failed. Please try again later.';
+        const errorDetail = error.response?.data || error.message;
         
+        // If it's a timeout or connection issue, let's try a smaller prompt
+        if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+             return res.status(504).json({ error: 'Celestial alignment taking longer than expected. Please simplify your question or try again.' });
+        }
+
         res.status(statusCode).json({ 
-            error: errorMessage,
-            details: error.response?.data || error.message
+            error: 'Astrological consultation failed. Please try again.',
+            details: errorDetail
         });
     }
 });
