@@ -145,8 +145,7 @@ class MainActivity : AppCompatActivity() {
                         binding.resultCard.animate().alpha(1f).setDuration(500).start()
                         
                         val isPro = getSharedPreferences("astro_prefs", Context.MODE_PRIVATE).getBoolean("is_pro", false)
-                        binding.btnDownloadPdf.visibility = View.VISIBLE 
-                        binding.btnShareApp.visibility = View.VISIBLE
+                        binding.llActionButtons.visibility = View.VISIBLE 
                         
                         binding.btnDownloadPdf.setOnClickListener {
                             if (isPro) {
@@ -213,13 +212,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun formatReport(report: String) {
+        val displayReport = if (report.length > 500) {
+            report.substring(0, 500) + "...\n\n[LOCKED] 💎 Full report and remedies are available in the Premium PDF."
+        } else {
+            report
+        }
+
         // Simple bolding for section headers
-        val formatted = report
-            .replace("🔮 Kundli Overview", "<b>🔮 Kundli Overview</b>")
-            .replace("📊 Current Life Analysis", "<b>📊 Current Life Analysis</b>")
-            .replace("🪔 Remedies & Solutions", "<b>🪔 Remedies & Solutions</b>")
+        val formatted = displayReport
+            .replace("🔮 PERSONALITY REVELATION", "<b>🔮 PERSONALITY REVELATION</b>")
+            .replace("📖 CHART EXPLANATION", "<b>📖 CHART EXPLANATION</b>")
+            .replace("🎯 FOCUS ON QUESTION", "<b>🎯 FOCUS ON QUESTION</b>")
+            .replace("💎 PREMIUM SACRED REMEDIES", "<b>💎 PREMIUM SACRED REMEDIES</b>")
+            .replace("[LOCKED]", "<font color='#D4AF37'><b>[LOCKED]</b></font>")
             .replace("\n", "<br/>")
+
+        binding.tvResult.text = android.text.Html.fromHtml(formatted, android.text.Html.FROM_HTML_MODE_LEGACY)
         
-        binding.tvResult.text = android.text.Html.fromHtml(formatted, android.text.Html.FROM_HTML_MODE_COMPACT)
+        // Ensure ASCII chart uses monospace font for alignment
+        if (report.contains("/") || report.contains("|")) {
+            binding.tvResult.typeface = android.graphics.Typeface.MONOSPACE
+        }
     }
 }

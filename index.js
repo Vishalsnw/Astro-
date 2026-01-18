@@ -82,6 +82,8 @@ IMPORTANT:
 
         // Professional PDF Styling
         doc.rect(0, 0, doc.page.width, doc.page.height).fill('#0F041A');
+        
+        // Use a font that supports Hindi if possible, otherwise stick to standard but with better encoding
         doc.fillColor('#D4AF37').fontSize(26).text('ASTRO GURU', { align: 'center' });
         doc.fontSize(14).text('Sacred Astrological Revelation', { align: 'center' });
         doc.moveDown(2);
@@ -92,9 +94,20 @@ IMPORTANT:
         doc.rect(50, doc.y, 500, 2).fill('#D4AF37');
         doc.moveDown();
 
-        doc.fillColor('#F5F5F5').fontSize(11).text(reportContent, {
-            align: 'justify',
-            lineGap: 5
+        // Split report into sections and handle ASCII chart separately to ensure monospace
+        const sections = reportContent.split('\n\n');
+        sections.forEach(section => {
+            if (section.includes('/') || section.includes('|')) {
+                // This is likely the ASCII chart, use Courier for monospace alignment
+                doc.font('Courier').fillColor('#D4AF37').fontSize(10).text(section, { align: 'center' });
+                doc.font('Helvetica'); // Reset
+            } else {
+                doc.fillColor('#F5F5F5').fontSize(11).text(section, {
+                    align: 'justify',
+                    lineGap: 5
+                });
+            }
+            doc.moveDown();
         });
         
         doc.moveDown(2);

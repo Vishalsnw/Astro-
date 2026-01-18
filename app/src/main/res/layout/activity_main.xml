@@ -295,27 +295,33 @@
                 android:textColor="@color/ethereal_white"
                 android:textSize="16sp" />
 
-            <Button
-                android:id="@+id/btnDownloadPdf"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/llActionButtons"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:text="📥 Download Premium Report"
-                android:textColor="@color/sacred_gold"
-                android:visibility="gone" />
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
 
-            <Button
-                android:id="@+id/btnShareApp"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="20dp"
-                android:text="✨ Share with Friends"
-                android:textColor="@color/nebula_accent"
-                android:visibility="gone" />
+                <Button
+                    android:id="@+id/btnDownloadPdf"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="12dp"
+                    android:text="📥 Download Premium Report"
+                    android:textColor="@color/sacred_gold"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btnShareApp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="✨ Share with Friends"
+                    android:textColor="@color/nebula_accent"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
