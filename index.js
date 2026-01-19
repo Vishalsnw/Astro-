@@ -21,35 +21,17 @@ app.post('/api/astrology', async (req, res) => {
         const prompt = `You are a professional Vedic Astrologer. 
 Format your response as a professional report in ${language} language with the following structure:
 
-1. 🔮 PERSONALITY REVELATION (The Mirror): Start by describing the user's core personality, hidden strengths, and a specific secret trait that only someone who knows their "Kundli" would know. This builds immediate trust.
-2. 📖 CHART EXPLANATION: Detailed explanation of the planetary positions and what they mean for the user.
-3. 🎯 FOCUS ON QUESTION: Directly address the user's specific concern: "${question}". Provide a summarized answer here.
-4. 💎 PREMIUM SACRED REMEDIES: This section contains the most powerful remedies, precise calculations, and life-changing solutions.
-   IMPORTANT: For the text-only result, provide a very brief summary of remedies. For the FULL PDF report, provide 3-4 pages of detailed, exhaustive astrological guidance including gems, rituals, and behavioral changes.
-
-Birth Details:
-Name: ${name}, DOB: ${dob}, Time: ${time}, Place: ${place}, Gender: ${gender}
+1. PERSONALITY REVELATION: Provide a deep, 2-page equivalent analysis of core personality, hidden strengths, and karmic traits based on birth details.
+2. CHART EXPLANATION: Detailed explanation of all planetary positions (Grahas) in Houses (Bhavas).
+3. FOCUS ON QUESTION: Directly and exhaustively address "${question}".
+4. PREMIUM SACRED REMEDIES: Detailed life-changing solutions, gemstone recommendations with logic, and specific rituals.
 
 IMPORTANT:
-- The entire response MUST be in ${language}.
-- Do NOT use markdown symbols like ** or ## in the result text.
-- Be very specific and detailed. We need a 3-4 page quality report in the PDF.
-- The tone should be "Divine, Personal, and Accurate".
-- FOR THE KUNDLI DIAGRAM: Generate a text-based ASCII North Indian Style Diamond Chart. 
-  Example structure (use double backslashes for diagonal lines):
-      / \\ / \\
-     / 12| 1 \\
-    |\\  / \\  /|
-    | \\/ 2 \\/ |
-    |11/\\   /\\3|
-    | /  \\ /  \\|
-    |/ 10 \\ 4 \\|
-    |\\    / \\  /|
-    | \\  / 7 \\/ |
-    | 9\\/_____\\ 5|
-     \\ 8 | 6 /
-      \\ / \\ /
-  Place the zodiac numbers and planetary symbols based on birth details.`;
+- The entire response MUST be in ${language}. 
+- For Hindi, use ONLY Hindi text.
+- Do NOT use markdown symbols like ** or ##.
+- WE NEED A VERY LONG RESPONSE (3-4 PAGES MINIMUM). Write in great detail.
+- Include a text-based ASCII North Indian Style Diamond Chart.`;
 
         const response = await axios.post(DEEPSEEK_API_URL, {
             model: 'deepseek-chat',
@@ -95,42 +77,61 @@ IMPORTANT:
             doc.font('Helvetica');
         }
 
-        // Professional PDF Styling
-        doc.rect(0, 0, doc.page.width, doc.page.height).fill('#0F041A');
+        // Professional PDF Styling (White Theme)
+        doc.rect(0, 0, doc.page.width, doc.page.height).fill('#FFFFFF');
         
-        doc.fillColor('#D4AF37').fontSize(26).text('ASTRO GURU', { align: 'center' });
-        doc.fontSize(14).text('Sacred Astrological Revelation', { align: 'center' });
-        doc.moveDown(2);
+        doc.fillColor('#0F041A').rect(0, 0, doc.page.width, 80).fill();
+        doc.fillColor('#D4AF37').fontSize(24).text('ASTRO GURU', { align: 'center', y: 25 });
+        doc.fontSize(12).text('Premium Astrological Report', { align: 'center' });
+        doc.moveDown(3);
         
-        doc.fillColor('#F5F5F5').fontSize(12);
-        doc.text(`Prepared for: ${name}`, { continued: true }).fillColor('#D4AF37').text(` | Date: ${new Date().toLocaleDateString()}`);
-        doc.fillColor('#F5F5F5').text(`Birth Details: ${dob} at ${time}, ${place}`);
+        doc.fillColor('#333333').fontSize(11);
+        doc.text(`Name: ${name}`, { continued: true }).text(` | Date: ${new Date().toLocaleDateString()}`, { align: 'right' });
+        doc.text(`Birth Details: ${dob} at ${time}, ${place}`);
         doc.moveDown();
-        doc.rect(50, doc.y, 500, 2).fill('#D4AF37');
+        doc.path('M 50 ' + doc.y + ' L 545 ' + doc.y).stroke('#D4AF37');
         doc.moveDown();
 
         // Split report into sections and handle ASCII chart separately
-        const sections = reportContent.split('\n');
-        sections.forEach(section => {
-            if (!section.trim()) return;
+        const lines = reportContent.split('\n');
+        lines.forEach(line => {
+            if (!line.trim()) {
+                doc.moveDown();
+                return;
+            }
 
-            if (section.includes('/') || section.includes('|')) {
+            if (line.includes('/') || line.includes('|') || line.includes('\\')) {
                 // ASCII Chart
-                doc.font('Courier').fillColor('#D4AF37').fontSize(10).text(section, { align: 'center' });
+                doc.font('Courier').fillColor('#2D0B5A').fontSize(9).text(line, { align: 'center', lineGap: 0 });
                 try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
             } else {
                 // Check if text contains Hindi characters
-                const hasHindi = /[\u0900-\u097F]/.test(section);
+                const hasHindi = /[\u0900-\u097F]/.test(line);
                 if (hasHindi) {
                     try { doc.font('Hindi'); } catch(e) { doc.font('Helvetica'); }
                 } else {
                     try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
                 }
                 
-                doc.fillColor('#F5F5F5').fontSize(11).text(section, {
-                    align: 'justify',
-                    lineGap: 2
-                });
+                // Section Title Styling
+                if (/^\d\./.test(line.trim())) {
+                    doc.fillColor('#2D0B5A').fontSize(14).text(line.trim(), { underline: true });
+                    doc.moveDown(0.5);
+                } else {
+                    doc.fillColor('#333333').fontSize(11).text(line, {
+                        align: 'justify',
+                        lineGap: 3
+                    });
+                }
+            }
+
+            if (doc.y > 720) {
+                doc.addPage();
+                doc.rect(0, 0, doc.page.width, doc.page.height).fill('#FFFFFF');
+                doc.fillColor('#0F041A').rect(0, 0, doc.page.width, 40).fill();
+                doc.fillColor('#D4AF37').fontSize(12).text('ASTRO GURU - Premium Report', { align: 'center', y: 15 });
+                doc.moveDown(3);
+                doc.fillColor('#333333');
             }
         });
         

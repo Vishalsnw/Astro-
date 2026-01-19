@@ -87,13 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun canMakeRequest(): Boolean {
-        val prefs = getSharedPreferences("astro_prefs", Context.MODE_PRIVATE)
-        val isPro = prefs.getBoolean("is_pro", false)
-        if (isPro) return true
-
-        val lastRequestDate = prefs.getString("last_request_date", "")
-        val today = String.format("%tD", Date())
-        return lastRequestDate != today
+        return true
     }
 
     private fun recordRequest() {
