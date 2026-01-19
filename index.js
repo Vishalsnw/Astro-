@@ -66,18 +66,31 @@ IMPORTANT:
 
         // Register fonts for Hindi support
         try {
-            if (fs.existsSync('fonts/NotoSansDevanagari-Regular.ttf') && fs.existsSync('fonts/NotoSans-Regular.ttf')) {
-                doc.registerFont('Hindi', 'fonts/NotoSansDevanagari-Regular.ttf');
-                doc.registerFont('Main', 'fonts/NotoSans-Regular.ttf');
+            const hindiFontPath = path.resolve(__dirname, 'fonts/NotoSansDevanagari-Regular.ttf');
+            const mainFontPath = path.resolve(__dirname, 'fonts/NotoSans-Regular.ttf');
+            
+            if (fs.existsSync(hindiFontPath)) {
+                doc.registerFont('Hindi', hindiFontPath);
+            }
+            if (fs.existsSync(mainFontPath)) {
+                doc.registerFont('Main', mainFontPath);
                 doc.font('Main');
             } else {
-                console.log('Font files missing, using Helvetica');
                 doc.font('Helvetica');
             }
         } catch (e) {
-            console.log('Font loading failed:', e.message);
+            console.log('Font registration failed:', e.message);
             doc.font('Helvetica');
         }
+
+        // Safe Font Selection Helper
+        const setSafeFont = (fontName) => {
+            try {
+                doc.font(fontName);
+            } catch (e) {
+                doc.font('Helvetica');
+            }
+        };
 
         // Professional PDF Styling (White Theme)
         doc.rect(0, 0, doc.page.width, doc.page.height).fill('#FFFFFF');
@@ -107,15 +120,16 @@ IMPORTANT:
             const isChartLine = trimmedLine.includes('|') || trimmedLine.includes('/') || trimmedLine.includes('\\') || trimmedLine.includes('--');
             
             if (isChartLine) {
-                doc.font('Courier').fillColor('#2D0B5A').fontSize(8).text(line, { align: 'center', lineGap: 0 });
-                try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
+                setSafeFont('Courier');
+                doc.fillColor('#2D0B5A').fontSize(8).text(line, { align: 'center', lineGap: 0 });
+                setSafeFont('Main');
             } else {
                 // Regular Text
                 const hasHindi = /[\u0900-\u097F]/.test(line);
                 if (hasHindi) {
-                    try { doc.font('Hindi'); } catch(e) { doc.font('Helvetica'); }
+                    setSafeFont('Hindi');
                 } else {
-                    try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
+                    setSafeFont('Main');
                 }
                 
                 // Section Title (1. Heading)
@@ -135,6 +149,7 @@ IMPORTANT:
                 doc.addPage();
                 doc.rect(0, 0, doc.page.width, doc.page.height).fill('#FFFFFF');
                 doc.fillColor('#0F041A').rect(0, 0, doc.page.width, 40).fill();
+                setSafeFont('Main');
                 doc.fillColor('#D4AF37').fontSize(12).text('ASTRO GURU - Premium Report', { align: 'center', y: 15 });
                 doc.moveDown(3);
                 doc.fillColor('#333333');
