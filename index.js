@@ -94,20 +94,23 @@ IMPORTANT:
         doc.path('M 50 ' + doc.y + ' L 545 ' + doc.y).stroke('#D4AF37');
         doc.moveDown();
 
-        // Split report into sections and handle ASCII chart separately
+        // Split report into lines and handle formatting
         const lines = reportContent.split('\n');
         lines.forEach(line => {
-            if (!line.trim()) {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) {
                 doc.moveDown();
                 return;
             }
 
-            if (line.includes('/') || line.includes('|') || line.includes('\\')) {
-                // ASCII Chart
-                doc.font('Courier').fillColor('#2D0B5A').fontSize(9).text(line, { align: 'center', lineGap: 0 });
+            // Detect ASCII Chart (High Priority)
+            const isChartLine = trimmedLine.includes('|') || trimmedLine.includes('/') || trimmedLine.includes('\\') || trimmedLine.includes('--');
+            
+            if (isChartLine) {
+                doc.font('Courier').fillColor('#2D0B5A').fontSize(8).text(line, { align: 'center', lineGap: 0 });
                 try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
             } else {
-                // Check if text contains Hindi characters
+                // Regular Text
                 const hasHindi = /[\u0900-\u097F]/.test(line);
                 if (hasHindi) {
                     try { doc.font('Hindi'); } catch(e) { doc.font('Helvetica'); }
@@ -115,19 +118,20 @@ IMPORTANT:
                     try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
                 }
                 
-                // Section Title Styling
-                if (/^\d\./.test(line.trim())) {
-                    doc.fillColor('#2D0B5A').fontSize(14).text(line.trim(), { underline: true });
+                // Section Title (1. Heading)
+                if (/^\d\./.test(trimmedLine)) {
+                    doc.fillColor('#2D0B5A').fontSize(14).text(trimmedLine, { underline: true });
                     doc.moveDown(0.5);
                 } else {
-                    doc.fillColor('#333333').fontSize(11).text(line, {
+                    doc.fillColor('#333333').fontSize(11).text(trimmedLine, {
                         align: 'justify',
-                        lineGap: 3
+                        lineGap: 4
                     });
                 }
             }
 
-            if (doc.y > 720) {
+            // Page Break Logic
+            if (doc.y > 700) {
                 doc.addPage();
                 doc.rect(0, 0, doc.page.width, doc.page.height).fill('#FFFFFF');
                 doc.fillColor('#0F041A').rect(0, 0, doc.page.width, 40).fill();
@@ -136,12 +140,7 @@ IMPORTANT:
                 doc.fillColor('#333333');
             }
         });
-        
-        doc.moveDown(2);
-        try { doc.font('Main'); } catch(e) { doc.font('Helvetica'); }
-        doc.fillColor('#D4AF37').fontSize(14).text('💎 PREMIUM SACRED REMEDIES', { underline: true });
-        doc.fillColor('#F5F5F5').fontSize(11).text('Based on your unique Lagna and planetary alignments, we provide specialized remedies to align your life path with the celestial forces.');
-        
+
         doc.end();
 
     } catch (error) {
