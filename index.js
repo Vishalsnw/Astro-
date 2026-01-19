@@ -86,7 +86,13 @@ IMPORTANT:
         // Safe Font Selection Helper
         const setSafeFont = (fontName) => {
             try {
-                doc.font(fontName);
+                if (fontName === 'Hindi') {
+                    doc.font('Hindi');
+                } else if (fontName === 'Main') {
+                    doc.font('Main');
+                } else {
+                    doc.font(fontName);
+                }
             } catch (e) {
                 doc.font('Helvetica');
             }
