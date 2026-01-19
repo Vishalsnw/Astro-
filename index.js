@@ -24,7 +24,8 @@ Format your response as a professional report in ${language} language with the f
 1. 🔮 PERSONALITY REVELATION (The Mirror): Start by describing the user's core personality, hidden strengths, and a specific secret trait that only someone who knows their "Kundli" would know. This builds immediate trust.
 2. 📖 CHART EXPLANATION: Detailed explanation of the planetary positions and what they mean for the user.
 3. 🎯 FOCUS ON QUESTION: Directly address the user's specific concern: "${question}". Provide a summarized answer here.
-4. [LOCKED] 💎 PREMIUM GUIDANCE & REMEDIES: This section contains the most powerful remedies, precise calculations, and life-changing solutions. In the text response, mention that "The sacred remedies and full detailed analysis are available in your Premium PDF Report. Unlock it now to reveal the path to your success."
+4. 💎 PREMIUM SACRED REMEDIES: This section contains the most powerful remedies, precise calculations, and life-changing solutions.
+   IMPORTANT: For the text-only result, provide a very brief summary of remedies. For the FULL PDF report, provide 3-4 pages of detailed, exhaustive astrological guidance including gems, rituals, and behavioral changes.
 
 Birth Details:
 Name: ${name}, DOB: ${dob}, Time: ${time}, Place: ${place}, Gender: ${gender}
@@ -32,9 +33,8 @@ Name: ${name}, DOB: ${dob}, Time: ${time}, Place: ${place}, Gender: ${gender}
 IMPORTANT:
 - The entire response MUST be in ${language}.
 - Do NOT use markdown symbols like ** or ## in the result text.
-- Be very specific about personality traits based on birth details to build "Aha!" moments.
+- Be very specific and detailed. We need a 3-4 page quality report in the PDF.
 - The tone should be "Divine, Personal, and Accurate".
-- In the PDF generation, include the FULL report including all remedies and detailed charts.
 - FOR THE KUNDLI DIAGRAM: Generate a text-based ASCII North Indian Style Diamond Chart. 
   Example structure (use double backslashes for diagonal lines):
       / \\ / \\

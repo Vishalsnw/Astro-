@@ -112,8 +112,15 @@ class MainActivity : AppCompatActivity() {
     private fun showTimePicker() {
         val calendar = Calendar.getInstance()
         TimePickerDialog(this, { _, hourOfDay, minute ->
-            binding.etTob.setText(String.format("%02d:%02d", hourOfDay, minute))
-        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
+            val amPm = if (hourOfDay < 12) "AM" else "PM"
+            val displayHour = when {
+                hourOfDay == 0 -> 12
+                hourOfDay > 12 -> hourOfDay - 12
+                else -> hourOfDay
+            }
+            val timeString = String.format("%02d:%02d %s", displayHour, minute, amPm)
+            binding.etTob.setText(timeString)
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false).show()
     }
 
     private fun observeViewModel() {

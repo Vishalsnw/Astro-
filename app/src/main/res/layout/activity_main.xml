@@ -132,7 +132,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Sacred Location"
+                    android:hint="Birth Place (City, State)"
                     app:hintTextColor="@color/sacred_gold"
                     app:boxStrokeColor="@color/divine_purple">
 
@@ -176,7 +176,7 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Your Sacred Question"
+                    android:hint="Ask your question"
                     app:hintTextColor="@color/sacred_gold"
                     app:boxStrokeColor="@color/nebula_accent">
 
