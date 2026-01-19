@@ -19,32 +19,34 @@ app.post('/api/astrology', async (req, res) => {
         }
 
         const prompt = `You are a professional Vedic Astrologer. 
-Format your response as a professional report in ${language} language with the following structure:
+Format your response as a professional report in ${language} language.
 
-1. PERSONALITY REVELATION: Provide a deep, 2-page equivalent analysis of core personality, hidden strengths, and karmic traits based on birth details.
-2. CHART EXPLANATION: Detailed explanation of all planetary positions (Grahas) in Houses (Bhavas).
-3. FOCUS ON QUESTION: Directly and exhaustively address "${question}".
-4. PREMIUM SACRED REMEDIES: Detailed life-changing solutions, gemstone recommendations with logic, and specific rituals.
+STRUCTURE:
+1. PERSONALITY REVELATION: Core traits and hidden strengths.
+2. CHART EXPLANATION: Planetary positions in Houses.
+3. FOCUS ON QUESTION: Directly address "${question}".
+4. PREMIUM SACRED REMEDIES: Gemstones and rituals.
 
 IMPORTANT:
-- The entire response MUST be in ${language}. 
-- For Hindi, use ONLY Hindi text.
-- Do NOT use markdown symbols like ** or ##.
-- WE NEED A VERY LONG RESPONSE (3-4 PAGES MINIMUM). Write in great detail.
-- Include a text-based ASCII North Indian Style Diamond Chart.`;
+- Language: ${language} only.
+- No markdown (** or ##).
+- LENGTH: Provide a detailed 2-3 page report.
+- Include a simple North Indian Style ASCII Chart.`;
 
         const response = await axios.post(DEEPSEEK_API_URL, {
             model: 'deepseek-chat',
             messages: [
-                { role: 'system', content: 'You are a professional Vedic Astrologer. Provide structured analysis without markdown formatting. Keep the response concise but accurate. Avoid generating very long reports to prevent timeout.' },
+                { role: 'system', content: 'You are a professional Vedic Astrologer. Give detailed but efficient responses to avoid timeout. Use plain text only.' },
                 { role: 'user', content: prompt }
-            ]
+            ],
+            max_tokens: 2500,
+            temperature: 0.7
         }, {
             headers: {
                 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
                 'Content-Type': 'application/json'
             },
-            timeout: 110000
+            timeout: 85000
         });
 
         let reportContent = response.data.choices[0].message.content;
