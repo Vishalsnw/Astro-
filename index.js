@@ -70,16 +70,12 @@ IMPORTANT:
             const hindiFontPath = path.join(__dirname, 'fonts', 'NotoSansDevanagari-Regular.ttf');
             const mainFontPath = path.join(__dirname, 'fonts', 'NotoSans-Regular.ttf');
             
-            console.log('Registering fonts from:', { hindiFontPath, mainFontPath });
-
             if (fs.existsSync(hindiFontPath)) {
                 doc.registerFont('Hindi', hindiFontPath);
-                console.log('Hindi font registered');
             }
             if (fs.existsSync(mainFontPath)) {
                 doc.registerFont('Main', mainFontPath);
                 doc.font('Main');
-                console.log('Main font registered');
             } else {
                 doc.font('Helvetica');
             }
@@ -91,13 +87,9 @@ IMPORTANT:
         // Safe Font Selection Helper
         const setSafeFont = (fontName) => {
             try {
-                if (fontName === 'Hindi') {
-                    doc.font('Hindi');
-                } else if (fontName === 'Main') {
-                    doc.font('Main');
-                } else {
-                    doc.font(fontName);
-                }
+                // pdfkit doesn't have a simple way to check if a font is registered
+                // so we just try to use it and catch the error
+                doc.font(fontName);
             } catch (e) {
                 doc.font('Helvetica');
             }
