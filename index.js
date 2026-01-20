@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 require('dotenv').config();
 
+const path = require('path');
 const app = express();
 app.use(express.json());
 
@@ -66,20 +67,24 @@ IMPORTANT:
 
         // Register fonts for Hindi support
         try {
-            const hindiFontPath = path.resolve(__dirname, 'fonts/NotoSansDevanagari-Regular.ttf');
-            const mainFontPath = path.resolve(__dirname, 'fonts/NotoSans-Regular.ttf');
+            const hindiFontPath = path.join(__dirname, 'fonts', 'NotoSansDevanagari-Regular.ttf');
+            const mainFontPath = path.join(__dirname, 'fonts', 'NotoSans-Regular.ttf');
             
+            console.log('Registering fonts from:', { hindiFontPath, mainFontPath });
+
             if (fs.existsSync(hindiFontPath)) {
                 doc.registerFont('Hindi', hindiFontPath);
+                console.log('Hindi font registered');
             }
             if (fs.existsSync(mainFontPath)) {
                 doc.registerFont('Main', mainFontPath);
                 doc.font('Main');
+                console.log('Main font registered');
             } else {
                 doc.font('Helvetica');
             }
         } catch (e) {
-            console.log('Font registration failed:', e.message);
+            console.error('Font registration failed:', e.message);
             doc.font('Helvetica');
         }
 
