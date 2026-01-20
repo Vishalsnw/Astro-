@@ -87,8 +87,8 @@ IMPORTANT:
         // Safe Font Selection Helper
         const setSafeFont = (fontName) => {
             try {
-                // pdfkit doesn't have a simple way to check if a font is registered
-                // so we just try to use it and catch the error
+                // Ensure font is only applied if it exists in doc.fonts
+                if (doc._font && doc._font.name === fontName) return;
                 doc.font(fontName);
             } catch (e) {
                 doc.font('Helvetica');
@@ -140,10 +140,20 @@ IMPORTANT:
                     doc.fillColor('#2D0B5A').fontSize(14).text(trimmedLine, { underline: true });
                     doc.moveDown(0.5);
                 } else {
-                    doc.fillColor('#333333').fontSize(11).text(trimmedLine, {
-                        align: 'justify',
-                        lineGap: 4
+                    // Split line into smaller chunks if it's too long to prevent xCoordinate error
+                    const words = trimmedLine.split(' ');
+                    let currentLine = '';
+                    words.forEach(word => {
+                        if (currentLine.length + word.length > 80) {
+                            doc.fillColor('#333333').fontSize(11).text(currentLine, { align: 'justify', lineGap: 4 });
+                            currentLine = word + ' ';
+                        } else {
+                            currentLine += word + ' ';
+                        }
                     });
+                    if (currentLine) {
+                        doc.fillColor('#333333').fontSize(11).text(currentLine, { align: 'justify', lineGap: 4 });
+                    }
                 }
             }
 
