@@ -161,43 +161,61 @@ Please provide the structured report in English.`;
                 return;
             }
 
-            // Detect ASCII Chart (High Priority)
-            const isChartLine = trimmedLine.includes('|') || trimmedLine.includes('/') || trimmedLine.includes('\\') || trimmedLine.includes('--');
-            
-            if (isChartLine) {
-                setSafeFont('Courier');
-                doc.fillColor('#2D0B5A').fontSize(8).text(line, { align: 'center', lineGap: 0 });
-                setSafeFont('Main');
-            } else {
-                // Regular Text
-                const hasHindi = /[\u0900-\u097F]/.test(line);
-                if (hasHindi) {
-                    setSafeFont('Hindi');
-                } else {
-                    setSafeFont('Main');
-                }
+                // Detect ASCII Chart (High Priority)
+                const isChartLine = trimmedLine.includes('|') || trimmedLine.includes('/') || trimmedLine.includes('\\') || trimmedLine.includes('--');
                 
-                // Section Title (1. Heading)
-                if (/^\d\./.test(trimmedLine)) {
-                    doc.fillColor('#2D0B5A').fontSize(14).text(trimmedLine, { underline: true });
-                    doc.moveDown(0.5);
+                if (isChartLine) {
+                    setSafeFont('Courier');
+                    doc.fillColor('#2D0B5A').fontSize(8);
+                    try {
+                        doc.text(line, { align: 'center', lineGap: 0 });
+                    } catch (e) {
+                        console.error('Chart line error:', e.message);
+                    }
+                    setSafeFont('Main');
                 } else {
-                    // Split line into smaller chunks if it's too long to prevent xCoordinate error
-                    const words = trimmedLine.split(' ');
-                    let currentLine = '';
-                    words.forEach(word => {
-                        if (currentLine.length + word.length > 60) {
-                            doc.text(currentLine.trim(), { align: 'justify', lineGap: 4 });
-                            currentLine = word + ' ';
-                        } else {
-                            currentLine += word + ' ';
+                    // Regular Text
+                    const hasHindi = /[\u0900-\u097F]/.test(line);
+                    if (hasHindi) {
+                        setSafeFont('Hindi');
+                    } else {
+                        setSafeFont('Main');
+                    }
+                    
+                    // Section Title (1. Heading)
+                    if (/^\d\./.test(trimmedLine)) {
+                        doc.fillColor('#2D0B5A').fontSize(14);
+                        try {
+                            doc.text(trimmedLine, { underline: true });
+                        } catch (e) {
+                            console.error('Heading error:', e.message);
                         }
-                    });
-                    if (currentLine) {
-                        doc.text(currentLine.trim(), { align: 'justify', lineGap: 4 });
+                        doc.moveDown(0.5);
+                    } else {
+                        // Split line into smaller chunks if it's too long to prevent xCoordinate error
+                        const words = trimmedLine.split(' ');
+                        let currentLine = '';
+                        words.forEach(word => {
+                            if (currentLine.length + word.length > 50) {
+                                try {
+                                    if (currentLine.trim()) doc.text(currentLine.trim(), { align: 'justify', lineGap: 4 });
+                                } catch (e) {
+                                    console.error('Text block error:', e.message);
+                                }
+                                currentLine = word + ' ';
+                            } else {
+                                currentLine += word + ' ';
+                            }
+                        });
+                        if (currentLine) {
+                            try {
+                                if (currentLine.trim()) doc.text(currentLine.trim(), { align: 'justify', lineGap: 4 });
+                            } catch (e) {
+                                console.error('Final line error:', e.message);
+                            }
+                        }
                     }
                 }
-            }
 
             // Page Break Logic
             if (doc.y > 700) {
