@@ -19,36 +19,60 @@ app.post('/api/astrology', async (req, res) => {
             return res.status(500).json({ error: 'DeepSeek API Key is missing' });
         }
 
-        const prompt = `You are a professional Vedic Astrologer. 
-Format your response as a professional report in ${language} language.
+        const sanitizedName = name.trim();
+        const sanitizedQuestion = question.trim();
+        const sanitizedPlace = place.trim();
 
-STRUCTURE:
-1. PERSONALITY REVELATION: Core traits and hidden strengths.
-2. CHART EXPLANATION: Planetary positions in Houses.
-3. FOCUS ON QUESTION: Directly address "${question}".
-4. PREMIUM SACRED REMEDIES: Gemstones and rituals.
+        const systemInstruction = language === 'Hindi' 
+            ? 'You are an expert Vedic astrologer. The user birth details and query are provided. Even though the query might be in Hindi, you must understand it fully and respond with a highly detailed, professional report EXCLUSIVELY in Hindi language. Do not use markdown formatting.'
+            : 'You are an expert Vedic astrologer. Provide a detailed, professional report in English. Do not use markdown formatting.';
 
-IMPORTANT:
-- Language: ${language} only.
-- No markdown (** or ##).
-- LENGTH: Provide a detailed 2-3 page report.
-- Include a simple North Indian Style ASCII Chart.`;
+        const userPrompt = `
+Birth Details:
+Name: ${sanitizedName}
+DOB: ${dob}
+Time: ${time}
+Place: ${sanitizedPlace}
+Gender: ${gender}
 
-        const response = await axios.post(DEEPSEEK_API_URL, {
-            model: 'deepseek-chat',
-            messages: [
-                { role: 'system', content: 'You are a professional Vedic Astrologer. Give detailed but efficient responses to avoid timeout. Use plain text only.' },
-                { role: 'user', content: prompt }
-            ],
-            max_tokens: 2500,
-            temperature: 0.7
-        }, {
-            headers: {
-                'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            timeout: 85000
-        });
+User Question: ${sanitizedQuestion}
+
+Please provide the structured report as requested earlier.`;
+
+        let response;
+        try {
+            response = await axios.post(DEEPSEEK_API_URL, {
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'system', content: systemInstruction },
+                    { role: 'user', content: userPrompt }
+                ],
+                max_tokens: 2500,
+                temperature: 0.7
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                timeout: 85000
+            });
+        } catch (apiError) {
+            console.error('Initial API Error:', apiError.response?.data || apiError.message);
+            
+            // Simplified Retry for Hindi or general failure
+            const retryInstruction = "You are a Vedic astrologer. Answer this birth chart query briefly and clearly. Language: " + language;
+            response = await axios.post(DEEPSEEK_API_URL, {
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'system', content: retryInstruction },
+                    { role: 'user', content: `Details: ${sanitizedName}, ${dob}, ${time}, ${sanitizedPlace}. Question: ${sanitizedQuestion}` }
+                ],
+                max_tokens: 1500
+            }, {
+                headers: { 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}` },
+                timeout: 60000
+            });
+        }
 
         let reportContent = response.data.choices[0].message.content;
         reportContent = reportContent.replace(/\*\*/g, '').replace(/##/g, '').replace(/#/g, '');
