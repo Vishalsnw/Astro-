@@ -14,8 +14,16 @@ const fs = require('fs');
 
 async function translateToHindi(text) {
     try {
-        const res = await translate(text, { to: 'hi' });
-        return res.text;
+        // Break long text into smaller chunks for Google Translate to avoid 413/500 errors
+        const chunks = text.match(/[\s\S]{1,2000}/g) || [text];
+        let translatedText = '';
+        
+        for (const chunk of chunks) {
+            const res = await translate(chunk, { to: 'hi' });
+            translatedText += res.text + ' ';
+        }
+        
+        return translatedText.trim();
     } catch (err) {
         console.error('Translation error:', err);
         return text; // Fallback to original text if translation fails
