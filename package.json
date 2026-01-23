@@ -13,6 +13,7 @@
     "axios": "^1.13.2",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "google-translate-api-x": "^10.7.2",
     "pdfkit": "^0.17.2"
   }
 }

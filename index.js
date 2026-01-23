@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 require('dotenv').config();
+const { translate } = require('google-translate-api-x');
 
 const path = require('path');
 const app = express();
@@ -10,6 +11,16 @@ const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+
+async function translateToHindi(text) {
+    try {
+        const res = await translate(text, { to: 'hi' });
+        return res.text;
+    } catch (err) {
+        console.error('Translation error:', err);
+        return text; // Fallback to original text if translation fails
+    }
+}
 
 app.post('/api/astrology', async (req, res) => {
     try {
@@ -23,9 +34,8 @@ app.post('/api/astrology', async (req, res) => {
         const sanitizedQuestion = question.trim();
         const sanitizedPlace = place.trim();
 
-        const systemInstruction = language === 'Hindi' 
-            ? 'You are an expert Vedic astrologer. The user birth details and query are provided. Even though the query might be in Hindi, you must understand it fully and respond with a highly detailed, professional report EXCLUSIVELY in Hindi language. Do not use markdown formatting.'
-            : 'You are an expert Vedic astrologer. Provide a detailed, professional report in English. Do not use markdown formatting.';
+        // STRICT English-only instruction for DeepSeek to avoid 500 errors
+        const systemInstruction = 'You are an expert Vedic astrologer. Provide a detailed, professional report EXCLUSIVELY in English language. Do not use markdown formatting. Use clear headings starting with numbers (e.g. 1. Heading).';
 
         const userPrompt = `
 Birth Details:
@@ -35,9 +45,9 @@ Time: ${time}
 Place: ${sanitizedPlace}
 Gender: ${gender}
 
-User Question: ${sanitizedQuestion}
+User Question (Translate to English if needed internally): ${sanitizedQuestion}
 
-Please provide the structured report as requested earlier.`;
+Please provide the structured report in English.`;
 
         let response;
         try {
@@ -57,25 +67,17 @@ Please provide the structured report as requested earlier.`;
                 timeout: 85000
             });
         } catch (apiError) {
-            console.error('Initial API Error:', apiError.response?.data || apiError.message);
-            
-            // Simplified Retry for Hindi or general failure
-            const retryInstruction = "You are a Vedic astrologer. Answer this birth chart query briefly and clearly. Language: " + language;
-            response = await axios.post(DEEPSEEK_API_URL, {
-                model: 'deepseek-chat',
-                messages: [
-                    { role: 'system', content: retryInstruction },
-                    { role: 'user', content: `Details: ${sanitizedName}, ${dob}, ${time}, ${sanitizedPlace}. Question: ${sanitizedQuestion}` }
-                ],
-                max_tokens: 1500
-            }, {
-                headers: { 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}` },
-                timeout: 60000
-            });
+            console.error('DeepSeek API Error:', apiError.response?.data || apiError.message);
+            return res.status(500).json({ error: 'The stars are temporarily obscured. Please try again in a moment.' });
         }
 
         let reportContent = response.data.choices[0].message.content;
         reportContent = reportContent.replace(/\*\*/g, '').replace(/##/g, '').replace(/#/g, '');
+
+        // Translate to Hindi if requested, outside DeepSeek
+        if (language === 'Hindi') {
+            reportContent = await translateToHindi(reportContent);
+        }
 
         // Generate PDF
         const doc = new PDFDocument({ margin: 50 });
