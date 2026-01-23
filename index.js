@@ -75,7 +75,8 @@ Please provide the structured report in English.`;
         reportContent = reportContent.replace(/\*\*/g, '').replace(/##/g, '').replace(/#/g, '');
 
         // Translate to Hindi if requested, outside DeepSeek
-        if (language === 'Hindi') {
+        if (language === 'Hindi' || language === 'हिंदी') {
+            console.log('Translating report to Hindi...');
             reportContent = await translateToHindi(reportContent);
         }
 
