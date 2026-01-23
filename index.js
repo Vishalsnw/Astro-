@@ -72,7 +72,10 @@ IMPORTANT:
             
             if (fs.existsSync(hindiFontPath)) {
                 doc.registerFont('Hindi', hindiFontPath);
+            } else {
+                console.error('CRITICAL: Hindi font missing at', hindiFontPath);
             }
+            
             if (fs.existsSync(mainFontPath)) {
                 doc.registerFont('Main', mainFontPath);
                 doc.font('Main');
@@ -87,9 +90,13 @@ IMPORTANT:
         // Safe Font Selection Helper
         const setSafeFont = (fontName) => {
             try {
-                // Ensure font is only applied if it exists in doc.fonts
-                if (doc._font && doc._font.name === fontName) return;
-                doc.font(fontName);
+                if (fontName === 'Hindi') {
+                    doc.font('Hindi');
+                } else if (fontName === 'Main') {
+                    doc.font('Main');
+                } else {
+                    doc.font(fontName);
+                }
             } catch (e) {
                 doc.font('Helvetica');
             }
@@ -144,15 +151,15 @@ IMPORTANT:
                     const words = trimmedLine.split(' ');
                     let currentLine = '';
                     words.forEach(word => {
-                        if (currentLine.length + word.length > 80) {
-                            doc.fillColor('#333333').fontSize(11).text(currentLine, { align: 'justify', lineGap: 4 });
+                        if (currentLine.length + word.length > 60) {
+                            doc.text(currentLine.trim(), { align: 'justify', lineGap: 4 });
                             currentLine = word + ' ';
                         } else {
                             currentLine += word + ' ';
                         }
                     });
                     if (currentLine) {
-                        doc.fillColor('#333333').fontSize(11).text(currentLine, { align: 'justify', lineGap: 4 });
+                        doc.text(currentLine.trim(), { align: 'justify', lineGap: 4 });
                     }
                 }
             }
