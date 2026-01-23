@@ -14,19 +14,41 @@ const fs = require('fs');
 
 async function translateToHindi(text) {
     try {
-        // Break long text into smaller chunks for Google Translate to avoid 413/500 errors
-        const chunks = text.match(/[\s\S]{1,2000}/g) || [text];
-        let translatedText = '';
-        
-        for (const chunk of chunks) {
-            const res = await translate(chunk, { to: 'hi' });
-            translatedText += res.text + ' ';
+        // Split text by numbered sections (e.g., "1. ", "2. ")
+        const sections = text.split(/(?=\d\.\s)/);
+        let translatedReport = '';
+
+        for (const section of sections) {
+            if (!section.trim()) continue;
+            
+            // Further split large sections into paragraphs to keep chunks under 1500 chars
+            const paragraphs = section.split('\n');
+            let currentChunk = '';
+            
+            for (const para of paragraphs) {
+                if ((currentChunk + para).length > 1500) {
+                    const res = await translate(currentChunk, { to: 'hi' });
+                    translatedReport += res.text + '\n';
+                    currentChunk = para + '\n';
+                } else {
+                    currentChunk += para + '\n';
+                }
+            }
+            
+            if (currentChunk.trim()) {
+                const res = await translate(currentChunk, { to: 'hi' });
+                translatedReport += res.text + '\n';
+            }
         }
         
-        return translatedText.trim();
+        // Final cleanup for natural language (basic post-processing)
+        return translatedReport
+            .replace(/नमस्ते/g, 'राम-राम') // Example of making it more friendly
+            .replace(/कि/g, 'कि') // Standardize
+            .trim();
     } catch (err) {
         console.error('Translation error:', err);
-        return text; // Fallback to original text if translation fails
+        return text; 
     }
 }
 
@@ -154,71 +176,75 @@ Please provide the structured report in English.`;
 
         // Split report into lines and handle formatting
         const lines = reportContent.split('\n');
-        lines.forEach(line => {
+        for (const line of lines) {
             const trimmedLine = line.trim();
             if (!trimmedLine) {
                 doc.moveDown();
-                return;
+                continue;
             }
 
-                // Detect ASCII Chart (High Priority)
-                const isChartLine = trimmedLine.includes('|') || trimmedLine.includes('/') || trimmedLine.includes('\\') || trimmedLine.includes('--');
-                
-                if (isChartLine) {
-                    setSafeFont('Courier');
-                    doc.fillColor('#2D0B5A').fontSize(8);
-                    try {
-                        doc.text(line, { align: 'center', lineGap: 0 });
-                    } catch (e) {
-                        console.error('Chart line error:', e.message);
-                    }
-                    setSafeFont('Main');
+            // Detect ASCII Chart (High Priority)
+            const isChartLine = trimmedLine.includes('|') || trimmedLine.includes('/') || trimmedLine.includes('\\') || trimmedLine.includes('--');
+            
+            if (isChartLine) {
+                setSafeFont('Courier');
+                doc.fillColor('#2D0B5A').fontSize(8);
+                try {
+                    doc.text(line, { align: 'center', lineGap: 0 });
+                } catch (e) {
+                    console.error('Chart line error:', e.message);
+                }
+                setSafeFont('Main');
+            } else {
+                // Regular Text
+                const hasHindi = /[\u0900-\u097F]/.test(line);
+                if (hasHindi) {
+                    setSafeFont('Hindi');
+                    doc.fontSize(11); // Ensure consistent size for Hindi
                 } else {
-                    // Regular Text
-                    const hasHindi = /[\u0900-\u097F]/.test(line);
-                    if (hasHindi) {
-                        setSafeFont('Hindi');
-                    } else {
-                        setSafeFont('Main');
+                    setSafeFont('Main');
+                    doc.fontSize(11);
+                }
+                
+                // Section Title (1. Heading)
+                if (/^\d\./.test(trimmedLine)) {
+                    doc.fillColor('#2D0B5A').fontSize(14);
+                    try {
+                        doc.text(trimmedLine, { underline: true });
+                    } catch (e) {
+                        console.error('Heading error:', e.message);
                     }
-                    
-                    // Section Title (1. Heading)
-                    if (/^\d\./.test(trimmedLine)) {
-                        doc.fillColor('#2D0B5A').fontSize(14);
-                        try {
-                            doc.text(trimmedLine, { underline: true });
-                        } catch (e) {
-                            console.error('Heading error:', e.message);
-                        }
-                        doc.moveDown(0.5);
-                    } else {
-                        // Split line into smaller chunks if it's too long to prevent xCoordinate error
-                        const words = trimmedLine.split(' ');
-                        let currentLine = '';
-                        words.forEach(word => {
-                            if (currentLine.length + word.length > 50) {
-                                try {
-                                    if (currentLine.trim()) doc.text(currentLine.trim(), { align: 'justify', lineGap: 4 });
-                                } catch (e) {
-                                    console.error('Text block error:', e.message);
-                                }
-                                currentLine = word + ' ';
-                            } else {
-                                currentLine += word + ' ';
-                            }
-                        });
-                        if (currentLine) {
+                    doc.moveDown(0.5);
+                } else {
+                    // Split line into smaller chunks if it's too long to prevent xCoordinate error
+                    const words = trimmedLine.split(' ');
+                    let currentLine = '';
+                    for (const word of words) {
+                        if (currentLine.length + word.length > 50) {
                             try {
-                                if (currentLine.trim()) doc.text(currentLine.trim(), { align: 'justify', lineGap: 4 });
+                                if (currentLine.trim()) {
+                                    doc.fillColor('#333333').text(currentLine.trim(), { align: 'justify', lineGap: 4 });
+                                }
                             } catch (e) {
-                                console.error('Final line error:', e.message);
+                                console.error('Text block error:', e.message);
                             }
+                            currentLine = word + ' ';
+                        } else {
+                            currentLine += word + ' ';
+                        }
+                    }
+                    if (currentLine.trim()) {
+                        try {
+                            doc.fillColor('#333333').text(currentLine.trim(), { align: 'justify', lineGap: 4 });
+                        } catch (e) {
+                            console.error('Final line error:', e.message);
                         }
                     }
                 }
+            }
 
-            // Page Break Logic
-            if (doc.y > 700) {
+            // Page Break Logic - More conservative to prevent truncation
+            if (doc.y > 680) {
                 doc.addPage();
                 doc.rect(0, 0, doc.page.width, doc.page.height).fill('#FFFFFF');
                 doc.fillColor('#0F041A').rect(0, 0, doc.page.width, 40).fill();
@@ -227,7 +253,7 @@ Please provide the structured report in English.`;
                 doc.moveDown(3);
                 doc.fillColor('#333333');
             }
-        });
+        }
 
         doc.end();
 
